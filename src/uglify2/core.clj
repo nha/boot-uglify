@@ -64,6 +64,13 @@
   [context writer]
   (.setWriter context writer))
 
+(defn eval-uglify
+  "evaluate the Uglify JS inside the engine"
+  [engine]
+  (let [files ["resources/Uglify2/compress.js"
+               "resources/Uglify2/uglifyjs.self.js"]]
+    (doall (map #(eval-str engine (slurp %)) files))))
+
 (defn find-mainfiles
   "Stolen from https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj"
   [fs]
@@ -89,8 +96,7 @@
 
 (let [engine  (create-engine)]
   (eval-str engine "print('hello JS');")
-
-  ;;(println "file " (slurp "Uglify2/uglifyjs.self.js"))
+  (eval-uglify engine)
   )
 
 
