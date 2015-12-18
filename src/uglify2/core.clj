@@ -93,14 +93,36 @@
 ;;   [path out-path]
 ;;   nil)
 
+(def test-str "var result = 123;
+  //UglifyJS.minify(\"var b = function () {};\", {fromString: true});
+print(\"result\", result);")
+
+;;(def test-str "print('test eval')")
 
 (let [engine  (create-engine)]
+  (println "---eval?")
   (eval-str engine "print('hello JS');")
+  (eval-str engine test-str)
   (eval-uglify engine)
+  (eval-str engine test-str)
+  ;;(println "eval..")
   )
-
 
 (core/deftask uglify
   "Uglify JS code"
   []
-  (println "task called !"))
+  (println "task called !")
+  (let [engine  (create-engine)]
+    (eval-str engine "print('hello JS');")
+    (eval-uglify engine)
+    ;; call Uglify on the files
+    (println "eval?")
+    (eval-str engine test-str)
+    (println "eval..")
+    ;; (eval-str engine
+    ;;           "var result = UglifyJS.minify("compiled.js", {
+    ;;                inSourceMap: "compiled.js.map",
+    ;;                outSourceMap: "minified.js.map"
+    ;;              });
+    ;;            console.log(result);" )
+    ))
