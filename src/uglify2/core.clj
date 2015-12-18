@@ -1,5 +1,10 @@
 (ns uglify2.core
-  (:require [clojure.java.io :as io])
+  {:boot/export-tasks true}
+  (:require [clojure.java.io :as io]
+            [clojure.java.io :as io]
+            [boot.pod        :as pod]
+            [boot.core       :as core]
+            [boot.util       :as util])
   (:import
    [java.io StringWriter]
    [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]))
@@ -57,6 +62,13 @@
   [context writer]
   (.setWriter context writer))
 
+(defn find-mainfiles
+  "Stolen from https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj"
+  [fs]
+  (->> fs
+       core/input-files
+       (core/by-ext [".js"])))
+
 ;;;;;;;;;;;;;;;;
 ;; Public API ;;
 ;;;;;;;;;;;;;;;;
@@ -74,6 +86,13 @@
 
 
 (let [engine  (create-engine)]
-
   (eval-str engine "print('hello JS');")
+
+  ;;(println "file " (slurp "Uglify2/uglifyjs.self.js"))
   )
+
+
+(core/deftask uglify
+  "Uglify JS code"
+  []
+  (println "task called !"))
