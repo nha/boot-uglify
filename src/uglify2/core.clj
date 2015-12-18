@@ -21,23 +21,40 @@
   (.eval engine s))
 
 (defn eval-resource
-  "Evaluate a file on the classpath in the engine."
+  "Evaluate a file on the classpath in the engine.
+  Stolen from ClojureScript"
   [^ScriptEngine engine path]
   (let [r (io/resource path)]
     (eval-str engine (slurp r))
     (println "loaded: " path)))
 
-(defn js-engine
-  "create a js engine"
-  []
-  (.getEngineByName (ScriptEngineManager.)  "javascript"))
+(defn create-engine
+  "Create a JS engine
+  Stolen from ClojureScript"
+  ([] (create-engine nil))
+  ([{:keys [code-cache] :or {code-cache true}}]
+   (let [args (when code-cache ["-pcc"])
+         factories (.getEngineFactories (ScriptEngineManager.))
+         factory (get (zipmap (map #(.getEngineName %) factories) factories) "Oracle Nashorn")]
+     (if-let [engine (if-not (empty? args)
+                       (.getScriptEngine ^ScriptEngineFactory factory (into-array args))
+                       (.getScriptEngine ^ScriptEngineFactory factory))]
+       (let [context (.getContext engine)]
+         (.setWriter context *out*)
+         (.setErrorWriter context *err*)
+         engine)
+       (throw (IllegalArgumentException.
+               "Cannot find the Nashorn script engine, use a JDK version 8 or higher."))))))
+
 
 (defn get-context
   "get the context from an engine"
   [^ScriptEngine engine]
   (.getContext engine))
 
-(defn set-writer! [context writer]
+(defn set-writer!
+  "set the writer of an engine"
+  [context writer]
   (.setWriter context writer))
 
 ;;;;;;;;;;;;;;;;
@@ -56,11 +73,7 @@
 ;;   nil)
 
 
-(let [engine  (js-engine)
-      context (get-context engine)
-      writer (StringWriter.)]
+(let [engine  (create-engine)]
 
-  (set-writer! context writer)
   (eval-str engine "print('hello JS');")
-  (println (str writer))
   )
