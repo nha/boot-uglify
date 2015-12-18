@@ -1,12 +1,18 @@
 /* http://lisperator.net/uglifyjs/compress */
-function compress(code, mangle) {
-    var ast = UglifyJS.parse(code);
+//print('loading compress');
+function compress(code, options) {
+    //print('calling compress');
+    var ast, compressor;
+
+    options = options || {};
+
+    ast = UglifyJS.parse(code);
     ast.figure_out_scope();
 
-    var compressor = UglifyJS.Compressor({});
+    compressor = UglifyJS.Compressor(options);
     ast = ast.transform(compressor);
 
-    if (mangle) {
+    if (options.mangle) {
 	ast.figure_out_scope();
 	ast.compute_char_frequency();
 	ast.mangle_names();
@@ -14,3 +20,5 @@ function compress(code, mangle) {
 
     return ast.print_to_string();
 }
+
+//print(compress("var b = function ok() { print('okkk'); return 123;}"));

@@ -1,10 +1,10 @@
 (ns uglify2.core
   {:boot/export-tasks true}
   (:require [clojure.java.io :as io]
-            [clojure.java.io :as io]
             [boot.pod        :as pod]
             [boot.core       :as core]
-            [boot.util       :as util])
+            [boot.util       :as util]
+            [cheshire.core   :refer :all])
   (:import
    [java.io StringWriter]
    [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]
@@ -13,7 +13,8 @@
 
 ;; see
 ;; https://github.com/mishoo/UglifyJS2/issues/122
-   ;; https://github.com/clojure/clojurescript/blob/c72e9c52156b3b348aa66857830c2ed1f0179e8c/src/main/clojure/cljs/repl/nashorn.clj#L29
+;; https://github.com/clojure/clojurescript/blob/c72e9c52156b3b348aa66857830c2ed1f0179e8c/src/main/clojure/cljs/repl/nashorn.clj#L29
+;; https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/prog_guide/api.html
 
 
 ;;;;;;;;;;;;;
@@ -67,9 +68,8 @@
 (defn eval-uglify
   "evaluate the Uglify JS inside the engine"
   [engine]
-  (let [files ["resources/Uglify2/compress.js"
-               "resources/Uglify2/uglifyjs.self.js"]]
-    (doall (map #(eval-str engine (slurp %)) files))))
+  (eval-str engine (slurp "resources/Uglify2/uglifyjs.self.js"))
+  (eval-str engine (slurp "resources/Uglify2/compress.js")))
 
 (defn find-mainfiles
   "Stolen from https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj"
@@ -93,36 +93,30 @@
 ;;   [path out-path]
 ;;   nil)
 
-(def test-str "var result = 123;
-  //UglifyJS.minify(\"var b = function () {};\", {fromString: true});
-print(\"result\", result);")
-
-;;(def test-str "print('test eval')")
+;;(def test-str "print(compress(\"var b = function myTest() {print('myTest'); return 123;}\"))")
+  (def test-str "print(compress(\"var c = function myTest() {print('myTest'); return 123;}\", {sequences : true}))")
 
 (let [engine  (create-engine)]
-  (println "---eval?")
   (eval-str engine "print('hello JS');")
-  (eval-str engine test-str)
   (eval-uglify engine)
-  (eval-str engine test-str)
-  ;;(println "eval..")
-  )
+  (println "test-str")
+  (eval-str engine test-str))
+
+;; see
+;; https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj#L17
+;; also see  --in-source-map option to be compatible with the google closure compiler
 
 (core/deftask uglify
   "Uglify JS code"
-  []
+  [o options bool "option map to pass to Uglify. See http://lisperator.net/uglifyjs/compress. Also, you can pass :mangle true to mangle names"]
   (println "task called !")
-  (let [engine  (create-engine)]
+  (let [engine  (create-engine)
+        js-opts (generate-string {:mangle false})]
     (eval-str engine "print('hello JS');")
     (eval-uglify engine)
     ;; call Uglify on the files
     (println "eval?")
     (eval-str engine test-str)
     (println "eval..")
-    ;; (eval-str engine
-    ;;           "var result = UglifyJS.minify("compiled.js", {
-    ;;                inSourceMap: "compiled.js.map",
-    ;;                outSourceMap: "minified.js.map"
-    ;;              });
-    ;;            console.log(result);" )
+
     ))

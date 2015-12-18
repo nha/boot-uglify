@@ -3,6 +3,7 @@
  :dependencies   '[[org.clojure/clojure "1.7.0"  :scope "provided"]
                    [boot/core           "2.5.1"  :scope "provided"]
                    [org.mozilla/rhino   "1.7.7"  :scope "provided"]
+                   [cheshire            "5.5.0"  :scope "provided"]
                    [adzerk/bootlaces    "0.1.13" :scope "test"]])
 
 (require '[adzerk.bootlaces :refer :all])
