@@ -14,12 +14,38 @@
 ;; see
 ;; https://github.com/mishoo/UglifyJS2/issues/122
 ;; https://github.com/clojure/clojurescript/blob/c72e9c52156b3b348aa66857830c2ed1f0179e8c/src/main/clojure/cljs/repl/nashorn.clj#L29
+;; https://github.com/adzerk-oss/boot-template/blob/master/src/adzerk/boot_template.clj
 ;; https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/prog_guide/api.html
 
+
+(def ^:private pod-deps
+  '[[boot/core         "2.5.1"]
+    [org.mozilla/rhino "1.7.7"]
+    [cheshire          "5.5.0"]])
 
 ;;;;;;;;;;;;;
 ;; Helpers ;;
 ;;;;;;;;;;;;;
+
+
+;; Boot
+
+(defn make-pod []
+  (-> (core/get-env)
+      (update-in [:dependencies] (fnil into []) pod-deps)
+      pod/make-pod
+      future))
+
+
+(defn- copy
+  "from boot-template"
+  [tf dir]
+  (let [f (core/tmp-file tf)]
+    (util/with-let [to (doto (io/file dir (:path tf)) io/make-parents)]
+      (io/copy f to))))
+
+
+;; Nashorn
 
 (defn eval-str
   "evaluate a string into an engine
@@ -65,6 +91,9 @@
   [context writer]
   (.setWriter context writer))
 
+
+;; Task
+
 (defn eval-uglify
   "evaluate the Uglify JS inside the engine"
   [engine]
@@ -77,6 +106,7 @@
   (->> fs
        core/input-files
        (core/by-ext [".js"])))
+
 
 ;;;;;;;;;;;;;;;;
 ;; Public API ;;
