@@ -1,5 +1,5 @@
 (set-env!
- :resource-paths #{"src"}
+ :resource-paths #{"src" "resources"}
  :dependencies   '[[org.clojure/clojure "1.7.0"  :scope "provided"]
                    [boot/core           "2.5.1"  :scope "provided"]
                    [org.mozilla/rhino   "1.7.7"  :scope "provided"]
