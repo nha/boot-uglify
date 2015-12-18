@@ -94,7 +94,7 @@
 ;;   nil)
 
 ;;(def test-str "print(compress(\"var b = function myTest() {print('myTest'); return 123;}\"))")
-  (def test-str "print(compress(\"var c = function myTest() {print('myTest'); return 123;}\", {sequences : true}))")
+(def test-str "print(compress(\"var c = function myTest() {print('myTest'); return 123;}\", {sequences : true, booleans: true}, false))")
 
 (let [engine  (create-engine)]
   (eval-str engine "print('hello JS');")
@@ -104,19 +104,19 @@
 
 ;; see
 ;; https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj#L17
-;; also see  --in-source-map option to be compatible with the google closure compiler
+;; also see  --in-source-map option to be compatible with the google closure compiler when using source maps
 
 (core/deftask uglify
   "Uglify JS code"
   [o options bool "option map to pass to Uglify. See http://lisperator.net/uglifyjs/compress. Also, you can pass :mangle true to mangle names"]
   (println "task called !")
   (let [engine  (create-engine)
-        js-opts (generate-string {:mangle false})]
+        js-opts (generate-string (or (dissoc options :mangle) {}))
+        mangle  (or (:mangle options) false)]
     (eval-str engine "print('hello JS');")
     (eval-uglify engine)
-    ;; call Uglify on the files
-    (println "eval?")
-    (eval-str engine test-str)
-    (println "eval..")
 
+    ;; idea
+    ;; "intercept" files from the fileset, get js files (possibly already min.js files)
+    ;; and (re-)minify them. If there is a source-map, pass the options accordingly
     ))

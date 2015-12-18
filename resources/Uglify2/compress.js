@@ -1,6 +1,6 @@
 /* http://lisperator.net/uglifyjs/compress */
 //print('loading compress');
-function compress(code, options) {
+function compress(code, options, mangle) {
     //print('calling compress');
     var ast, compressor;
 
@@ -12,7 +12,7 @@ function compress(code, options) {
     compressor = UglifyJS.Compressor(options);
     ast = ast.transform(compressor);
 
-    if (options.mangle) {
+    if (mangle) {
 	ast.figure_out_scope();
 	ast.compute_char_frequency();
 	ast.mangle_names();
