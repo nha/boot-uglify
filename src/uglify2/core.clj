@@ -7,11 +7,13 @@
             [boot.util       :as util])
   (:import
    [java.io StringWriter]
-   [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]))
+   [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]
+   ;;[org.mozilla.javascript Context ImporterTopLevel ScriptableObject]
+   ))
 
 ;; see
 ;; https://github.com/mishoo/UglifyJS2/issues/122
-;; https://github.com/clojure/clojurescript/blob/c72e9c52156b3b348aa66857830c2ed1f0179e8c/src/main/clojure/cljs/repl/nashorn.clj#L29
+   ;; https://github.com/clojure/clojurescript/blob/c72e9c52156b3b348aa66857830c2ed1f0179e8c/src/main/clojure/cljs/repl/nashorn.clj#L29
 
 
 ;;;;;;;;;;;;;
