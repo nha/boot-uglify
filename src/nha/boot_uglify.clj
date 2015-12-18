@@ -1,4 +1,4 @@
-(ns uglify2.core
+(ns nha.boot-uglify
   {:boot/export-tasks true}
   (:require [clojure.java.io :as io]
             [boot.pod        :as pod]
