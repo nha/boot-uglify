@@ -1,10 +1,12 @@
 (ns nha.boot-uglify
   {:boot/export-tasks true}
-  (:require [clojure.java.io :as io]
-            [boot.pod        :as pod]
-            [boot.core       :as core]
-            [boot.util       :as util]
-            [cheshire.core   :refer :all])
+  (:require [clojure.java.io   :as io]
+            [clojure.string    :as string]
+            [boot.pod          :as pod]
+            [boot.core         :as core]
+            [boot.util         :as util]
+            [boot.file          :as file]
+            [boot.task-helpers :as helpers])
   (:import
    [java.io StringWriter]
    [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]
@@ -23,26 +25,9 @@
     [org.mozilla/rhino "1.7.7"]
     [cheshire          "5.5.0"]])
 
-;;;;;;;;;;;;;
-;; Helpers ;;
-;;;;;;;;;;;;;
-
-
-;; Boot
-
-(defn make-pod []
-  (-> (core/get-env)
-      (update-in [:dependencies] (fnil into []) pod-deps)
-      pod/make-pod
-      future))
-
-
-(defn- copy
-  "from boot-template"
-  [tf dir]
-  (let [f (core/tmp-file tf)]
-    (util/with-let [to (doto (io/file dir (:path tf)) io/make-parents)]
-      (io/copy f to))))
+;; ;;;;;;;;;;;;;
+;; ;; Helpers ;;
+;; ;;;;;;;;;;;;;
 
 
 ;; Nashorn
@@ -94,59 +79,114 @@
 
 ;; Task
 
-(defn eval-uglify
+(defn load-uglify
   "evaluate the Uglify JS inside the engine"
   [engine]
   (eval-str engine (slurp "resources/Uglify2/uglifyjs.self.js"))
   (eval-str engine (slurp "resources/Uglify2/compress.js")))
 
 (defn find-mainfiles
-  "Stolen from https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj"
-  [fs]
+  "Modified from https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj"
+  [fs ext]
   (->> fs
        core/input-files
-       (core/by-ext [".js"])))
+       (core/by-ext ext)))
+
+
+;; Boot
+
+(defn make-pod
+  "From boot-template"
+  []
+  (-> (core/get-env)
+      (update-in [:dependencies] (fnil into []) pod-deps)
+      pod/make-pod
+      future))
+
+
+(defn get-files
+  [fileset]
+  (->> fileset
+       core/ls
+       (map (comp file/split-path core/tmp-path))
+       ((fn [xs] (seq (remove nil? xs))))))
+
+
+(defn read-cljs-edn
+  "Stolen from https://github.com/adzerk-oss/boot-cljs/blob/master/src/adzerk/boot_cljs.clj#L50"
+  [tmp-file]
+  (let [file (core/tmp-file tmp-file)
+        path (core/tmp-path tmp-file)]
+    (assoc (read-string (slurp file))
+           :path     (.getPath file)
+           :rel-path path
+           :id       (string/replace (.getName file) #"\.cljs\.edn$" ""))))
 
 
 ;;;;;;;;;;;;;;;;
-;; Public API ;;
+;;            ;;
 ;;;;;;;;;;;;;;;;
 
-;; (defn minify-str
-;;   "Minify a string"
-;;   [^String s]
-;;   nil)
+(defn minify-str
+  "Minify a string"
+  [engine ^String s]
+  (eval-str engine (str "print(compress(\"" s  " \", {sequences : true, booleans: true}, false))"))
+  )
 
-;; (defn uglify
-;;   "a wrapper around uglifyJS2
-;;   TODO see args"
-;;   [path out-path]
-;;   nil)
-
-;;(def test-str "print(compress(\"var b = function myTest() {print('myTest'); return 123;}\"))")
-(def test-str "print(compress(\"var c = function myTest() {print('myTest'); return 123;}\", {sequences : true, booleans: true}, false))")
-
-(let [engine  (create-engine)]
-  (eval-str engine "print('hello JS');")
-  (eval-uglify engine)
-  (println "test-str")
-  (eval-str engine test-str))
-
-;; see
-;; https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj#L17
-;; also see  --in-source-map option to be compatible with the google closure compiler when using source maps
 
 (core/deftask uglify
   "Uglify JS code"
-  [o options bool "option map to pass to Uglify. See http://lisperator.net/uglifyjs/compress. Also, you can pass :mangle true to mangle names"]
-  (println "task called !")
-  (let [engine  (create-engine)
-        js-opts (generate-string (or (dissoc options :mangle) {}))
-        mangle  (or (:mangle options) false)]
-    (eval-str engine "print('hello JS');")
-    (eval-uglify engine)
+  [;o options OPTS {} "option map to pass to Uglify. See http://lisperator.net/uglifyjs/compress. Also, you can pass :mangle true to mangle names"
+   ]
+  (util/info "Uglifying JS...\n")
+
+  (let [p          (make-pod)
+        js-engine  (create-engine)
+        ;;js-opts (generate-string (or (dissoc options :mangle) {}))
+        ;;mangle  (or (:mangle options) false)
+        tgt (core/tmp-dir!)]
+
+    (eval-str js-engine "print('hello JS');")
+
+    ;; path pb in here : eval in pod ?
+    ;;(load-uglify js-engine) ;; load UglifyJS2 into the engine memory
 
     ;; idea
-    ;; "intercept" files from the fileset, get js files (possibly already min.js files)
-    ;; and (re-)minify them. If there is a source-map, pass the options accordingly
-    ))
+    ;; "intercept" files from the fileset, get cljs.edn files
+    ;; and use them (how) to find the final output file an minify it
+    ;; improvement : source maps (suported by UglifyJS2)
+
+    (core/with-pre-wrap [fs]
+      ;;(util/info "Task files : " (seq (core/input-files fs)))
+      ;;(util/info "no more task files\n")
+      (helpers/print-fileset fs)
+      ;; (println "Files :"  (get-files fs)) ;; util/info does not work here ?
+      ;; (println "Intersting files " (find-mainfiles fs [".js"]))
+      ;; (println "Intersting files READABLE "  (find-mainfiles fs [".js"]))
+      (let [js-files    (find-mainfiles fs [".js"])
+            comp-files  (find-mainfiles fs [".cljs.edn"])
+            edn-content (map read-cljs-edn comp-files)]
+        (println "JS FILES _______________________________"  edn-content)
+
+        ;; run the uglyfication in a pod
+
+        )
+      fs)))
+
+
+(comment
+  ;; test to uglify simple strings
+
+  ;;(def test-str "print(compress(\"var b = function myTest() {print('myTest'); return 123;}\"))")
+  (def test-str "print(compress(\"var c = function myTest() {print('myTest'); return 123;}\", {sequences : true, booleans: true}, false))")
+
+  (let [engine  (create-engine)]
+    (eval-str engine "print('hello JS');")
+    (load-uglify engine)
+    (println "test-str")
+    (eval-str engine test-str))
+
+  ;; see
+  ;; https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj#L17
+  ;; also see  --in-source-map option to be compatible with the google closure compiler when using source maps
+  )
