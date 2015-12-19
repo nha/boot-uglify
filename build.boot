@@ -10,11 +10,11 @@
 (bootlaces! +version+)
 
 (task-options!
- pom {:project     'nha/boot-uglify2
+ pom {:project     'nha/boot-uglify
       :version     +version+
       :description "Boot task to uglify js code using UglifyJS2"
       :url         "https://github.com/nha/boot-uglify2"
-      :scm         {:url "https://github.com/nha/boot-uglify2"}
+      :scm         {:url "https://github.com/nha/boot-uglify"}
       :license     {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}})
 
 (deftask dev
