@@ -6,3 +6,4 @@ pom.xml.asc
 /target/
 /checkouts/
 .nrepl-port
+nashorn_code_cache/

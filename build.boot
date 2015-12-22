@@ -1,8 +1,14 @@
 (set-env!
  :resource-paths #{"src" "resources"}
  :dependencies   '[[org.clojure/clojure "1.7.0"  :scope "provided"]
-                   [boot/core           "2.5.1"  :scope "provided"]
-                   [adzerk/bootlaces    "0.1.13" :scope "test"]])
+                   [boot/core           "2.5.5"  :scope "provided"]
+                   [adzerk/bootlaces    "0.1.13" :scope "test"]
+                   ;; dev only
+                   [boot/core                        "2.5.5"]
+                   [org.mozilla/rhino                "1.7.7"]
+                   [cheshire                         "5.5.0"]
+                   [org.apache.commons/commons-lang3 "3.4"]
+                   ])
 
 (require '[adzerk.bootlaces :refer :all])
 
