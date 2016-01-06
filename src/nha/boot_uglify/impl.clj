@@ -114,12 +114,11 @@
 
 (defn minify-str*
   "Minify a string"
-  ([^String s] (minify-str* s {} (create-uglify-engine)))
-  ([^String s opts] (minify-str* s opts (create-uglify-engine)))
-  ([^String s opts engine]
+  ([^String s] (minify-str* (create-uglify-engine) s {}))
+  ([engine ^String s] (minify-str* (create-uglify-engine) s {}))
+  ([engine ^String s opts]
    (let  [js-opts (generate-string (dissoc opts :mangle))
           mangle  (str (or (:mangle opts) false))
-
           code (str "var BOOT_UGLIFY_CODE =\"" (escape-js s) "\";"
                     "compress(BOOT_UGLIFY_CODE, " js-opts ", " mangle ");")]
      (eval-str engine code))))
@@ -135,14 +134,16 @@
   [^String s opts]
   ;; js-engine cannot be passed as argument
   ;; from boot through a reader (no reader macro for it)
-  (let [res (minify-str* s opts js-engine)]
-    (println "MINIFIED RESULT :")
-    (println res)
+  (let [res (minify-str* js-engine s opts)]
+    ;;(println "MINIFIED RESULT :")
+    ;;(println res)
     res))
 
 
 (comment
   ;; Arities without the engine are used for REPLing
+
+  (def e (create-uglify-engine))
 
   (escape-js "a = 'test'; // 'test' used here \n print(\"a is\",  a); ")
   (escape-js "a = \"test\"; // \"test\" used here")
@@ -150,6 +151,8 @@
 
   (minify-str* "a = 'test'; // 'test' used here")
   (minify-str* "var c = function myTest() {print('myTest'); return 123;}")
-  (minify-str* "var unused= 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment")
+  (minify-str* "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment")
+
+  (minify-str* e "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment")
 
   )

@@ -65,48 +65,76 @@
            :id       (string/replace (.getName file) #"\.cljs\.edn$" ""))))
 
 
+(def default-options {:sequences     true,  ; join consecutive statemets with the “comma operator”
+                      :properties    true,  ; optimize property access: a["foo"] → a.foo
+                      :dead_code     true,  ; discard unreachable code
+                      :drop_debugger true,  ; discard “debugger” statements
+                      :unsafe        false, ; some unsafe optimizations
+                      :conditionals  true,  ; optimize if-s and conditional expressions
+                      :comparisons   true,  ; optimize comparisons
+                      :evaluate      true,  ; evaluate constant expressions
+                      :booleans      true,  ; optimize boolean expressions
+                      :loops         true,  ; optimize loops
+                      :unused        true,  ; drop unused variables/functions
+                      :hoist_funs    true,  ; hoist function declarations
+                      :hoist_vars    false, ; hoist variable declarations
+                      :if_return     true,  ; optimize if-s followed by return/continue
+                      :join_vars     true,  ; join var declarations
+                      :cascade       true,  ; try to cascade `right` into `left` in sequences
+                      :side_effects  true,  ; drop side-effect-free statements
+                      :warnings      true,  ; warn about potentially dangerous optimizations/code
+                      :global_defs   {},    ; global definitions
+                      :mangle        false  ; mangle names
+                      })
+
 (core/deftask uglify
   "Uglify JS code."
-  [;o options OPTS {} "option map to pass to Uglify. See http://lisperator.net/uglifyjs/compress. Also, you can pass :mangle true to mangle names"
-   ]
+  [o options OPTS {} "option map to pass to Uglify. See http://lisperator.net/uglifyjs/compress. Also, you can pass :mangle true to mangle names."]
+
   (util/info "Uglifying JS...\n")
 
-  (let [pod        (make-pod)
-        tgt (core/tmp-dir!)]
+  (println "OPTIONS ARE " options)
+
+  (let [options (merge default-options options)
+        pod     (make-pod)
+        tgt     (core/tmp-dir!)]
 
     ;; idea
     ;; "intercept" files from the fileset, get cljs.edn files
     ;; and use them (how) to find the final output file an minify it
     ;; improvement : source maps (suported by UglifyJS2)
 
+
     (core/with-pre-wrap [fs]
       ;;(util/info "Task files : " (seq (core/input-files fs)))
       ;;(util/info "no more task files\n")
-      (helpers/print-fileset fs)
+      ;;(helpers/print-fileset fs)
       (core/empty-dir! tgt)
       ;; (println "Files :"  (get-files fs)) ;; util/info does not work here ?
-      ;; (println "Intersting files " (find-mainfiles fs [".js"]))
-      ;; (println "Intersting files READABLE "  (find-mainfiles fs [".js"]))
+      ;; (println "Interesting files " (find-mainfiles fs [".js"]))
+      ;; (println "Interesting files READABLE "  (find-mainfiles fs [".js"]))
       (let [js-files   (find-mainfiles fs [".js"])
             edn-files  (find-mainfiles fs [".cljs.edn"])
             edn-content (map read-cljs-edn edn-files)
             ;;out-paths (-> edn-files :compiler-options :asset-path )
             out-paths  (map (comp :asset-path :compiler-options) edn-content)
-            test-files (filter #(= "js/main.js" (:path %)) js-files)]
-        ;;(println "JS FILES _______________________________"  (map :path js-files))
-        ;; (println "JS FILES _______________________________" test-files)
-        ;; (println "OUT_PATHS "out-paths)
-        ;; (println "END-FILES _______________________________"  edn-files)
-        ;; (println "EDN CONTENT _______________________________"  edn-content)
+            test-files (filter #(= "js/main.js" (:path %)) js-files)
+            files test-files]
+
+        ;; if-let here ??
 
         ;; run the minification in a pod, in a temp target directory
-        (doseq [f test-files :let [subf (copy f tgt)
+        (doseq [f files :let [subf (copy f tgt)
                                    txt  (slurp subf)
                                    path (core/tmp-path f)]]
-
-          (println "EVAL " (pod/with-call-in @pod (nha.boot-uglify.impl/minify-str ~txt ~{})))
-          ;;(spit subf (pod/with-call-in @pod (minify-str js-engine txt {})))
-          ))
+          (let [minified (pod/with-call-in @pod (nha.boot-uglify.impl/minify-str ~txt ~{}))]
+            (println "Size before : " (count txt))
+            (println "Size after : " (count minified))
+            (spit subf minified)))
+        (-> fs
+            (core/rm files)
+            (core/add-resource tgt)
+            core/commit!))
       fs)))
 
 
