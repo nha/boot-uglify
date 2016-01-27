@@ -1,12 +1,19 @@
 A boot task to uglify JS files
 
-No man river
+“No man ever steps in the same river twice, for it's not the same river and he's not the same man.”
+- Heraclitus
 
+In case the citation did not give it away, this is a Clojure library.
 
-Intended usage :
+As an extra optimisation step in the release process to make JavaScript output file(s) smaller, using uglify-js under the hood.
 
-As an extra optimisation step in the release process to make the output file smaller.
+# Installation
 
+[![Clojars Project](https://img.shields.io/clojars/v/nha/boot-uglify.svg)](https://clojars.org/nha/boot-uglify)
+
+Status: alpha
+
+## Usage with boot
 
 Relevant parts to add to the `build.boot` :
 
@@ -28,7 +35,7 @@ Relevant parts to add to the `build.boot` :
   (comp
    ;;(watch)
    (cljs :optimizations :advanced)
-   (uglify)
+   (uglify) ;; still provides a gain even after the cljs task
    ;;(aot)
    ;;(pom)
    ;;(uber)
@@ -67,7 +74,47 @@ The defaults :
  }
 ```
 
-Future :
 
-- support source maps (UglifyJS supports it already)
-- benchmark output sizes versus the google closure compiler when gzipped on a variety of projects
+# As a library
+
+Minifying functions that operate on strings and files are exposed:
+
+# Why ?
+
+I found out that applying UglifyJS2 on my library compiled with :advanced mode of the google closure compiler did yield a size improvement.
+
+
+
+# Contributing
+
+Any contribution is very welcome. See the aims section below or issues.
+
+Proposed workflow:
+- find/make a project that created js files and add the boot integration as described above (ie. use the library)
+- clone this repository
+- change the version to version-SNAPSHOT or something like this in both this repository and your project
+- in this repository, run : `boot dev`
+- in your project, run whatever command produces the JS files (note that show -f can be convenient): `boot production show -f build show -f` or `boot dev uglify-js`
+
+
+# Aims
+
+Steps (roughly in that order):
+
+- [ ] support source maps (UglifyJS supports it already)
+- [ ] make it faster for big files (maybe use uglify-node)
+- [ ] benchmark output sizes versus the google closure compiler when gzipped on a variety of projects.
+- [ ] minify JS files with different compressors (yui/google-closure/rollup etc.) and see if chaining them yields better results (after gzipping).
+- [ ] minify CSS files as well - http://goalsmashers.github.io/css-minification-benchmark/
+- [ ] minify HTML directories - see https://github.com/kangax/html-minifier
+- [ ] minify JARS with proguard?
+- [ ] at any given step, see if some protocol could be implemented
+
+
+# Thanks
+
+The following libraries were a source of inspiration or code:
+
+- assets-minifier
+- boot-cljsjs
+- yuanyan/UglifyJS-java

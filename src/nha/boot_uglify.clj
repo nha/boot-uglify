@@ -14,11 +14,15 @@
    ))
 
 (def ^:private pod-deps
-  '[[boot/core                        "2.5.5"]
-    [org.mozilla/rhino                "1.7.7"]
-    [cheshire                         "5.5.0"]
-    [org.apache.commons/commons-lang3 "3.4"]
-    ])
+  '[[boot/core                                 "2.5.5"]
+    [org.mozilla/rhino                         "1.7.7"]
+    [cheshire                                  "5.5.0"]
+    [org.apache.commons/commons-lang3          "3.4"]
+    [com.yahoo.platform.yui/yuicompressor      "2.4.8" :exclusions [rhino/js]]
+    [com.google.javascript/closure-compiler    "v20160315"]
+    [org.apache.httpcomponents/httpclient      "4.4.1"]
+    [org.apache.httpcomponents/httpasyncclient "4.1"]])
+
 
 (defn find-mainfiles
   "Modified from https://github.com/Deraen/boot-less/blob/master/src/deraen/boot_less.clj"
@@ -43,7 +47,10 @@
       (update-in [:dependencies] (fnil into []) pod-deps)
       (update-in [:resource-paths] (fnil into #{}) #{"resources"})
       pod/make-pod
-      future))
+      future
+      ;; (.setName "boot-uglify")
+      ;;(.setName the-pod "doop")
+      ))
 
 
 (defn get-files
@@ -104,7 +111,6 @@
     ;; and use them (how) to find the final output file an minify it
     ;; improvement : source maps (suported by UglifyJS2)
 
-
     (core/with-pre-wrap [fs]
       ;;(util/info "Task files : " (seq (core/input-files fs)))
       ;;(util/info "no more task files\n")
@@ -127,7 +133,7 @@
         (doseq [f files :let [subf (copy f tgt)
                                    txt  (slurp subf)
                                    path (core/tmp-path f)]]
-          (let [minified (pod/with-call-in @pod (nha.boot-uglify.impl/minify-str ~txt ~{}))]
+          (let [minified (pod/with-call-in @pod (nha.boot-uglify.impl/minify-js-str ~txt ~{}))]
             (println "Size before : " (count txt))
             (println "Size after : " (count minified))
             (spit subf minified)))
@@ -166,3 +172,43 @@
      ))
 
   )
+
+
+
+
+
+;; see
+;; https://github.com/cljsjs/boot-cljsjs/blob/master/src/cljsjs/boot_cljsjs/packaging.clj#L134
+
+;; (c/deftask minify
+;;   "Minifies .js and .css files based on their file extension
+;;    NOTE: potentially slow when called with watch or multiple times"
+;;   [i in  INPUT  str "Path to file to be compressed"
+;;    o out OUTPUT str "Path to where compressed file should be saved"
+;;    l lang LANGUAGE_IN kw "Language of the input javascript file. Default value is ecmascript3."]
+;;   (assert in "Path to input file required")
+;;   (assert out "Path to output file required")
+;;   (let [tmp      (c/tmp-dir!)
+;;         out-file (io/file tmp out)
+;;         min-pod  (minifier-pod)]
+;;     (c/with-pre-wrap fileset
+;;       (let [in-files (c/input-files fileset)
+;;             in-file  (c/tmp-file (first (c/by-re [(re-pattern in)] in-files)))
+;;             in-path  (.getPath in-file)
+;;             out-path (.getPath out-file)]
+;;         (util/info "Minifying %s\n" (.getName in-file))
+;;         (io/make-parents out-file)
+;;         (cond
+;;           (. in-path (endsWith "js"))
+;;           (pod/with-eval-in min-pod
+;;             (require 'asset-minifier.core)
+;;             (asset-minifier.core/minify-js ~in-path ~out-path (if ~lang
+;;                                                                 {:language ~lang}
+;;                                                                 {})))
+;;           (. in-path (endsWith "css"))
+;;           (pod/with-eval-in min-pod
+;;             (require 'asset-minifier.core)
+;;             (asset-minifier.core/minify-css ~in-path ~out-path)))
+;;         (-> fileset
+;;             (c/add-resource tmp)
+;;             c/commit!)))))

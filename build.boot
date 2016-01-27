@@ -1,18 +1,28 @@
 (set-env!
  :resource-paths #{"src" "resources"}
- :dependencies   '[[org.clojure/clojure "1.7.0"  :scope "provided"]
-                   [boot/core           "2.5.5"  :scope "provided"]
-                   [adzerk/bootlaces    "0.1.13" :scope "test"]
-                   ;; dev only
-                   [boot/core                        "2.5.5"]
-                   [org.mozilla/rhino                "1.7.7"]
-                   [cheshire                         "5.5.0"]
-                   [org.apache.commons/commons-lang3 "3.4"]
+ :dependencies   '[[org.clojure/clojure                    "1.8.0"     :scope "provided"]
+                   [boot/core                              "2.5.5"     :scope "provided"]
+                   [adzerk/bootlaces                       "0.1.13"    :scope "test"]
+                   [boot/core                              "2.5.5"     :scope "test"]
+                   [org.mozilla/rhino                      "1.7.7.1"   :scope "test"]
+                   [cheshire                               "5.6.1"     :scope "test"]
+                   [org.apache.commons/commons-lang3       "3.4"       :scope "test"]
+                   [com.yahoo.platform.yui/yuicompressor   "2.4.8"     :exclusions [rhino/js] :scope "test"]
+                   [commons-io                             "2.4"       :scope "test"]
+                   [com.google.javascript/closure-compiler "v20160315" :scope "test"]
+                   [org.apache.httpcomponents/httpclient      "4.4.1"  :scope "test"]
+                   [org.apache.httpcomponents/httpasyncclient "4.1"    :scope "test"]
+                   [io.apigee.trireme/trireme-kernel "0.8.9"]
+                   [io.apigee.trireme/trireme-core "0.8.9"]
+                   [io.apigee.trireme/trireme-node10src "0.8.9"]
+                   [io.apigee.trireme/trireme-crypto "0.8.9"]
+                   [io.apigee.trireme/trireme-util "0.8.9"]
+                   [io.apigee.trireme/trireme-shell "0.8.9"]
                    ])
 
 (require '[adzerk.bootlaces :refer :all])
 
-(def +version+ "0.0.1")
+(def +version+ "0.0.1-SNAPSHOT")
 
 (bootlaces! +version+)
 

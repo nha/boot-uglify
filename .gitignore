@@ -7,3 +7,4 @@ pom.xml.asc
 /checkouts/
 .nrepl-port
 nashorn_code_cache/
+*.DS_Store

@@ -1,0 +1,3 @@
+[submodule "resources/html-minifier"]
+	path = resources/html-minifier
+	url = git@github.com:kangax/html-minifier.git
