@@ -1,4 +1,6 @@
 (set-env!
+ :source-paths #{"src" "test"}
+ :test-paths     #{"test"}
  :resource-paths #{"src" "resources"}
  :dependencies   '[[org.clojure/clojure                    "1.8.0"     :scope "provided"]
                    [boot/core                              "2.5.5"     :scope "provided"]
@@ -13,6 +15,7 @@
                    [org.apache.httpcomponents/httpclient      "4.4.1"  :scope "test"]
                    [org.apache.httpcomponents/httpasyncclient "4.1"    :scope "test"]
                    [metosin/boot-alt-test                     "0.1.0-SNAPSHOT" :scope "test"]
+                   [adzerk/boot-test "1.1.1" :scope "test"]
                    [io.apigee.trireme/trireme-kernel "0.8.9"]
                    [io.apigee.trireme/trireme-core "0.8.9"]
                    [io.apigee.trireme/trireme-node10src "0.8.9"]
@@ -22,7 +25,8 @@
                    ])
 
 (require '[adzerk.bootlaces :refer :all]
-         '[metosin.boot-alt-test :refer [alt-test]])
+         '[metosin.boot-alt-test :refer [alt-test]]
+         '[adzerk.boot-test :refer [test]])
 
 (def +version+ "0.0.1-SNAPSHOT")
 
