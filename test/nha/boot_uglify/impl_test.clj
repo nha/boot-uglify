@@ -14,7 +14,7 @@
       (.delete file))
     (.delete file)))
 
-(defn massage-data [m]
+(defn message-data [m]
   (-> m
       (update-in [:sources] set)
       (update-in [:gzipped-size] #(when % (int (/ % 100))))))
@@ -22,7 +22,7 @@
 (defmacro run-test [fn result]
   `(do
      ;;(clean-output (io/file output-path))
-     (is (= (massage-data ~result) (massage-data ~fn)))))
+     (is (= (message-data ~result) (message-data ~fn)))))
 
 (deftest minification-is-correct []
   (let [source (file-seq (clojure.java.io/file "resources/samples/js/source/"))
@@ -32,8 +32,6 @@
 
         ]
 
-    (testing "source files -> expected files"
-      (is (= true false)))
     )
 
   )
@@ -49,15 +47,23 @@
 
 
     ;; minify a file
-    (run-test
-     (sut/minify-js (str js-input-path "arrays.js") (str output-path "arrays.min.js"))
-     {:sources ("arrays.js")
-      :target "arrays.min.js"
-      :original-size 153
-      :compressed-size 47
-      :gzipped-size 55
-      :warnings '()
-      :errors '()})
+
+    ;; (let [in-file (str js-input-path "arrays.js")
+    ;;       out-file (str output-path "arrays.min.js")
+    ;;       expected-file (str output-path "arrays.js")
+    ;;       res (sut/minify-js in-file out-file)]
+
+    ;;   (is (= res {:sources ("arrays.js")
+    ;;               :target "arrays.min.js"
+    ;;               :original-size 153
+    ;;               :compressed-size 47
+    ;;               :gzipped-size 55
+    ;;               :warnings '()
+    ;;               :errors '()}))
+    ;;   (is (= (str (slurp out-file) "\n") (slurp expected-file)))
+    ;;   )
+
+    ;; check that the file is the same
 
 
     ;; ;; minify directory
