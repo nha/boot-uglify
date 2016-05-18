@@ -96,6 +96,7 @@ Proposed workflow:
 - in this repository, run : `boot dev`
 - in your project, run whatever command produces the JS files (note that show -f can be convenient): `boot production show -f build show -f` or `boot dev uglify-js`
 
+- run tests with `boot watch alt-test`
 
 # Aims
 

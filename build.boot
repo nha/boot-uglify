@@ -12,6 +12,7 @@
                    [com.google.javascript/closure-compiler "v20160315" :scope "test"]
                    [org.apache.httpcomponents/httpclient      "4.4.1"  :scope "test"]
                    [org.apache.httpcomponents/httpasyncclient "4.1"    :scope "test"]
+                   [metosin/boot-alt-test                     "0.1.0-SNAPSHOT" :scope "test"]
                    [io.apigee.trireme/trireme-kernel "0.8.9"]
                    [io.apigee.trireme/trireme-core "0.8.9"]
                    [io.apigee.trireme/trireme-node10src "0.8.9"]
@@ -20,7 +21,8 @@
                    [io.apigee.trireme/trireme-shell "0.8.9"]
                    ])
 
-(require '[adzerk.bootlaces :refer :all])
+(require '[adzerk.bootlaces :refer :all]
+         '[metosin.boot-alt-test :refer [alt-test]])
 
 (def +version+ "0.0.1-SNAPSHOT")
 
