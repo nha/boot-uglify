@@ -5,7 +5,7 @@ A boot task to uglify JS files
 
 In case the citation did not give it away, this is a Clojure library.
 
-As an extra optimisation step in the release process to make JavaScript output file(s) smaller, using uglify-js under the hood.
+As an extra optimisation step in the release process to make JavaScript output file(s) smaller, using uglify-js2 under the hood.
 
 # Installation
 
@@ -102,7 +102,7 @@ Proposed workflow:
 Steps (roughly in that order):
 
 - [ ] support source maps (UglifyJS supports it already)
-- [ ] make it faster for big files (maybe use uglify-node)
+- [ ] make it faster for big files (use uglify-node? operate on files?)
 - [ ] benchmark output sizes versus the google closure compiler when gzipped on a variety of projects.
 - [ ] minify JS files with different compressors (yui/google-closure/rollup etc.) and see if chaining them yields better results (after gzipping).
 - [ ] minify CSS files as well - http://goalsmashers.github.io/css-minification-benchmark/
