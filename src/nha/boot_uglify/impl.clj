@@ -140,9 +140,9 @@
   ;; js-engine cannot be passed as argument
   ;; from boot through a reader (no reader macro for it)
   (let [res (minify-str* js-engine s opts)]
-    ;;(println "MINIFIED RESULT :")
-    ;;(println res)
-    res))
+    {:s res
+     :errors '()
+     :warnings '()}))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -235,8 +235,9 @@
 
   (time (escape-js (slurp "resources/samples/js/source/sample1.js")))
 
-  (time (minify-str* (slurp "resources/samples/js/source/sample1.js"))) ;; 87 sec!
+  (time (minify-str* (slurp "resources/samples/js/source/sample1.js")));; 87 sec!
 
+  (time (minify-str (slurp "resources/samples/js/source/error.js") {}))
   )
 
 
@@ -245,13 +246,16 @@
                                  :or {language :ecmascript3}}]]
   (delete-target target)
   (merge-files (aggregate path ".js") target)
-  ;; use uglifyjs instead of google compiler
+  ;; use uglifyjs instead of google closure compiler
   (let [assets   (aggregate path ".js")
-        result   (minify-str (->> assets
-                                    (map slurp)
-                                    (reduce str)) {})]
-    (spit target result)
-    (merge [result] (compression-details assets (io/file target)))))
+        {:keys [s errors warnings] :as result} (minify-str (->> assets
+                                                                (map slurp)
+                                                                (reduce str)) {})]
+    (spit target s)
+    ;;(merge [result] (compression-details assets (io/file target)))
+  (merge
+   (select-keys result [:errors :warnings])
+   (compression-details assets (io/file target)))))
 
 
 (comment
