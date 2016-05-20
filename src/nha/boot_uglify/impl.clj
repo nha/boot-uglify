@@ -63,7 +63,16 @@
   "evaluate a string into an engine
   returns nil - the result is contained in the engine"
   ([^String s] (eval-str (create-engine) s))
-  ([^ScriptEngine engine ^String s] (.eval engine s)))
+  ([^ScriptEngine engine ^String s]
+   (try
+     {:s (.eval engine s)
+      :errors '()
+      :warnings '()}
+     (catch Exception e
+       (println "EX " e)
+       {:s ""
+        :errors (cons e '())
+        :warnings '()}))))
 
 (defn eval-resource
   "Evaluate a file on the classpath in the engine."
@@ -139,10 +148,8 @@
   [^String s opts]
   ;; js-engine cannot be passed as argument
   ;; from boot through a reader (no reader macro for it)
-  (let [res (minify-str* js-engine s opts)]
-    {:s res
-     :errors '()
-     :warnings '()}))
+  (let [{:keys [errors s warnings] :as res} (minify-str* js-engine s opts)]
+    res))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

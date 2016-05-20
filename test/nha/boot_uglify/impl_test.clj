@@ -39,12 +39,18 @@
 
 
     ;; minify a file
-
-    (let [in-file (str js-input-path "arrays.js")
-          out-file (str js-output-path "arrays.min.js")
-          expected-file (str js-output-path "arrays.js")
-          res (sut/minify-js in-file out-file)]
-      res)
+    (comment
+      (let [in-file (str js-input-path "arrays.js")
+            out-file (str js-output-path "arrays.min.js")
+            expected-file (str js-output-path "arrays.js")
+            res (sut/minify-js in-file out-file)]
+        res)
+      (let [in-file (str js-input-path "error.js")
+            out-file (str js-output-path "error.min.js")
+            expected-file (str js-output-path "error.js")
+            res (sut/minify-js in-file out-file)]
+        res)
+      )
 
     (let [in-file (str js-input-path "arrays.js")
           out-file (str js-output-path "arrays.min.js")
