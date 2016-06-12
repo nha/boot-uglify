@@ -1,17 +1,22 @@
-A boot task to uglify JS files
+# Boot-uglify
+
+A [Clojure](https://clojure.org/) wrapper around [UglifyJS](https://github.com/mishoo/UglifyJS) as well as a [boot](https://boot-clj.com/) task
 
 “No man ever steps in the same river twice, for it's not the same river and he's not the same man.”
-- Heraclitus
+                                                                                Heraclitus
 
 In case the citation did not give it away, this is a Clojure library.
 
-As an extra optimisation step in the release process to make JavaScript output file(s) smaller, using uglify-js2 under the hood.
+
+The intended use it as an extra optimisation step in the release process to make JavaScript output file(s) smaller, using uglify-js2 under the hood.
+
 
 # Installation
 
 [![Clojars Project](https://img.shields.io/clojars/v/nha/boot-uglify.svg)](https://clojars.org/nha/boot-uglify)
 
 Status: alpha
+boot task in progress
 
 ## Usage with boot
 
@@ -79,43 +84,44 @@ The defaults :
 
 Minifying functions that operate on strings and files are exposed:
 
+```
+(minify-str (slurp "resources/samples/js/source/error.js") {})
+
+```
+
 # Why ?
 
-I found out that applying UglifyJS2 on my library compiled with :advanced mode of the google closure compiler did yield a size improvement.
-
+I found out on my project that:
+- ClojureScript libraries can quickly become quite bulky (very easily >50K)
+- applying UglifyJS2 on my JS artefact, already compiled in `:advanced` mode made it smaller, even after gzipping (about 10%)
 
 
 # Contributing
 
-Any contribution is very welcome. See the aims section below or issues.
+Contributions/feedback welcome! See the aims section below or issues.
 
-Proposed workflow:
-- find/make a project that created js files and add the boot integration as described above (ie. use the library)
-- clone this repository
-- change the version to version-SNAPSHOT or something like this in both this repository and your project
-- in this repository, run : `boot dev`
-- in your project, run whatever command produces the JS files (note that show -f can be convenient): `boot production show -f build show -f` or `boot dev uglify-js`
-
-- run tests with `boot watch alt-test`
 
 # Aims
 
+The final aim is to be the go-to library to shave off some size/obfuscate code in Clojure(Script) apps.
 Steps (roughly in that order):
 
-- [ ] support source maps (UglifyJS supports it already)
-- [ ] make it faster for big files (use uglify-node? operate on files?)
-- [ ] benchmark output sizes versus the google closure compiler when gzipped on a variety of projects.
+- [ ] support source maps (UglifyJS has support for it)
+- [ ] make it faster for big files (use uglify-node if availble? operate on files?)
+- [ ] minify HTML directories - see https://github.com/kangax/html-minifier (which minifies html/css/js)
+- [ ] benchmark and document output sizes versus the google closure compiler when gzipped on a variety of projects.
 - [ ] minify JS files with different compressors (yui/google-closure/rollup etc.) and see if chaining them yields better results (after gzipping).
 - [ ] minify CSS files as well - http://goalsmashers.github.io/css-minification-benchmark/
-- [ ] minify HTML directories - see https://github.com/kangax/html-minifier
 - [ ] minify JARS with proguard?
 - [ ] at any given step, see if some protocol could be implemented
 
 
 # Thanks
 
-The following libraries were a source of inspiration or code:
+The following libraries were a source of inspiration or code (or both):
 
 - assets-minifier
 - boot-cljsjs
 - yuanyan/UglifyJS-java
+
+Remaining bugs are mine though.
