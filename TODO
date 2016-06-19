@@ -1,0 +1,88 @@
+## Usage with boot
+
+
+Relevant parts to add to the `build.boot` :
+
+
+```
+(set-env! :dependencies '[;; ...
+                          [nha/boot-uglify "0.1.1"]
+                          ])
+
+(require
+ ;;...
+ '[nha.boot-uglify       :refer [minify-js]]
+ )
+
+;; sample task
+(deftask package
+  "Build the package"
+  []
+  (comp
+   ;;(watch)
+   (cljs :optimizations :advanced)
+   (uglify) ;; still provides a gain even after the cljs task
+   ;;(aot)
+   ;;(pom)
+   ;;(uber)
+   ;;(jar)
+   ))
+
+```
+
+The options listed at See http://lisperator.net/uglifyjs/compress are supported.
+Additionally, :mangle is supported.
+
+The defaults :
+
+```
+{
+ :sequences     true,  ; join consecutive statemets with the “comma operator”
+ :properties    true,  ; optimize property access: a["foo"] → a.foo
+ :dead_code     true,  ; discard unreachable code
+ :drop_debugger true,  ; discard “debugger” statements
+ :unsafe        false, ; some unsafe optimizations
+ :conditionals  true,  ; optimize if-s and conditional expressions
+ :comparisons   true,  ; optimize comparisons
+ :evaluate      true,  ; evaluate constant expressions
+ :booleans      true,  ; optimize boolean expressions
+ :loops         true,  ; optimize loops
+ :unused        true,  ; drop unused variables/functions
+ :hoist_funs    true,  ; hoist function declarations
+ :hoist_vars    false, ; hoist variable declarations
+ :if_return     true,  ; optimize if-s followed by return/continue
+ :join_vars     true,  ; join var declarations
+ :cascade       true,  ; try to cascade `right` into `left` in sequences
+ :side_effects  true,  ; drop side-effect-free statements
+ :warnings      true,  ; warn about potentially dangerous optimizations/code
+ :global_defs   {},    ; global definitions
+ :mangle        false
+ }
+```
+
+
+# Why ?
+
+I found out on my project that:
+- ClojureScript libraries can quickly become quite bulky (very easily >50K)
+- applying UglifyJS2 on my JS artefact, already compiled in `:advanced` mode made it smaller, and it resulted in a net gain of about 20% when served gzipped
+
+
+# Contributing
+
+Contributions/feedback welcome! See the aims section below or issues.
+
+
+# Aims
+
+The final aim is to be the go-to library to shave off some size/obfuscate code in Clojure(Script) apps.
+Steps (roughly in that order):
+
+- [ ] support source maps (UglifyJS has support for it)
+- [ ] make it faster for big files (use uglify-node if availble? operate on files?)
+- [ ] minify HTML directories - see https://github.com/kangax/html-minifier (which minifies html/css/js)
+- [ ] benchmark and document output sizes versus the google closure compiler when gzipped on a variety of projects.
+- [ ] minify JS files with different compressors (yui/google-closure/rollup etc.) and see if chaining them yields better results (after gzipping).
+- [ ] minify CSS files as well - http://goalsmashers.github.io/css-minification-benchmark/
+- [ ] minify JARS with proguard?
+- [ ] at any given step, see if some protocol could be implemented

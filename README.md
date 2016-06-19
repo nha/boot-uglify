@@ -1,119 +1,28 @@
 # Boot-uglify
 
-A [Clojure](https://clojure.org/) wrapper around [UglifyJS](https://github.com/mishoo/UglifyJS) as well as a [boot](https://boot-clj.com/) task
+A [Clojure](https://clojure.org/) library to minify JavaScript code.
 
-“No man ever steps in the same river twice, for it's not the same river and he's not the same man.”
-                                                                                Heraclitus
-
-In case the citation did not give it away, this is a Clojure library.
-
-
-The intended use it as an extra optimisation step in the release process to make JavaScript output file(s) smaller, using uglify-js2 under the hood.
+Use it as an extra optimisation step in your release process to make the JavaScrip file(s) smaller.
+Use the Google Closure Compiler normally but when releasing files in `:advanced` mode, use this library to further compress the files. There can be up to 20% gain on the final file served.
 
 
 # Installation
 
 [![Clojars Project](https://img.shields.io/clojars/v/nha/boot-uglify.svg)](https://clojars.org/nha/boot-uglify)
 
-Status: alpha
-boot task in progress
 
-## Usage with boot
+# How to use it
 
-Relevant parts to add to the `build.boot` :
 
 
 ```
-(set-env! :dependencies '[;; ...
-                          [nha/boot-uglify "0.0.1"]
-                          ])
+(require 'nha.boot-uglify.minify-js :refer [minify-js])
 
-(require
- ;;...
- '[nha.boot-uglify       :refer [uglify]]
- )
-
-;; sample task
-(deftask package
-  "Build the package"
-  []
-  (comp
-   ;;(watch)
-   (cljs :optimizations :advanced)
-   (uglify) ;; still provides a gain even after the cljs task
-   ;;(aot)
-   ;;(pom)
-   ;;(uber)
-   ;;(jar)
-   ))
+;; operates on files or directories
+;; (minify-js in out)
+(minify-js "my-js-file.js" "my-js-file.min.js") ;;=> {:errors (), :warnings (), :sources ("arrays.js"), :target "arrays.min.js", :original-size 153, :compressed-size 47, :gzipped-size 55}
 
 ```
-
-The options listed at See http://lisperator.net/uglifyjs/compress are supported.
-Additionally, :mangle is supported.
-
-The defaults :
-
-```
-{
- :sequences     true,  ; join consecutive statemets with the “comma operator”
- :properties    true,  ; optimize property access: a["foo"] → a.foo
- :dead_code     true,  ; discard unreachable code
- :drop_debugger true,  ; discard “debugger” statements
- :unsafe        false, ; some unsafe optimizations
- :conditionals  true,  ; optimize if-s and conditional expressions
- :comparisons   true,  ; optimize comparisons
- :evaluate      true,  ; evaluate constant expressions
- :booleans      true,  ; optimize boolean expressions
- :loops         true,  ; optimize loops
- :unused        true,  ; drop unused variables/functions
- :hoist_funs    true,  ; hoist function declarations
- :hoist_vars    false, ; hoist variable declarations
- :if_return     true,  ; optimize if-s followed by return/continue
- :join_vars     true,  ; join var declarations
- :cascade       true,  ; try to cascade `right` into `left` in sequences
- :side_effects  true,  ; drop side-effect-free statements
- :warnings      true,  ; warn about potentially dangerous optimizations/code
- :global_defs   {},    ; global definitions
- :mangle        false
- }
-```
-
-
-# As a library
-
-Minifying functions that operate on strings and files are exposed:
-
-```
-(minify-str (slurp "resources/samples/js/source/error.js") {})
-
-```
-
-# Why ?
-
-I found out on my project that:
-- ClojureScript libraries can quickly become quite bulky (very easily >50K)
-- applying UglifyJS2 on my JS artefact, already compiled in `:advanced` mode made it smaller, even after gzipping (about 10%)
-
-
-# Contributing
-
-Contributions/feedback welcome! See the aims section below or issues.
-
-
-# Aims
-
-The final aim is to be the go-to library to shave off some size/obfuscate code in Clojure(Script) apps.
-Steps (roughly in that order):
-
-- [ ] support source maps (UglifyJS has support for it)
-- [ ] make it faster for big files (use uglify-node if availble? operate on files?)
-- [ ] minify HTML directories - see https://github.com/kangax/html-minifier (which minifies html/css/js)
-- [ ] benchmark and document output sizes versus the google closure compiler when gzipped on a variety of projects.
-- [ ] minify JS files with different compressors (yui/google-closure/rollup etc.) and see if chaining them yields better results (after gzipping).
-- [ ] minify CSS files as well - http://goalsmashers.github.io/css-minification-benchmark/
-- [ ] minify JARS with proguard?
-- [ ] at any given step, see if some protocol could be implemented
 
 
 # Thanks
