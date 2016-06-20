@@ -41,7 +41,7 @@ The minifier provides two functions called `minify-css` and `minify-js`, both fu
 Relevant parts to add to the `build.boot` :
 
 
-```
+```clojure
 (set-env! :dependencies '[;; ...
                           [nha/boot-uglify "0.0.2"]
                           ])
