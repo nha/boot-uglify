@@ -3,7 +3,7 @@
 A [Clojure](https://clojure.org/) library to minify JavaScript code.
 
 Use it as an extra optimisation step in your release process to make the JavaScrip file(s) smaller.
-Use the Google Closure Compiler normally but when releasing files in `:advanced` mode, use this library to further compress the files. There can be up to 20% gain on the final file served.
+Use the Google Closure Compiler normally but when releasing files in `:advanced` mode, use this library to further compress the files. There can be [20%](https://blog.jeaye.com/2016/02/16/clojurescript/) gain on the final file served.
 
 
 # Installation

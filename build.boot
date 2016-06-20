@@ -7,7 +7,6 @@
                    [boot/core                                 "2.6.0"     :scope "provided"]
                    [adzerk/bootlaces                          "0.1.13"    :scope "test"]
 
-
                    [metosin/boot-alt-test                     "0.1.0"     :scope "test"]
                    [adzerk/boot-test                          "1.1.1"     :scope "test"]
 
@@ -41,7 +40,7 @@
          '[me.raynes.fs       :as fs]
          '[clojure.java.io :as io])
 
-(def +version+ "0.0.1-SNAPSHOT")
+(def +version+ "0.0.1")
 
 (bootlaces! +version+)
 
