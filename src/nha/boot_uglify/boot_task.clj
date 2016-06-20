@@ -128,7 +128,7 @@
         (doseq [edn-file-content (map read-cljs-edn (find-mainfiles fileset ids))]
           (let [js-rel-path (string/replace (:rel-path edn-file-content) #"\.cljs\.edn$" ".js")
                 in-file (core/tmp-file (tmp-get fileset js-rel-path))
-                out-path (string/replace js-rel-path #"\.js" ".min.js")
+                out-path js-rel-path ;;(string/replace js-rel-path #"\.js" ".min.js")
                 out-file (io/file tmp-main out-path)]
             (util/info (str "• " js-rel-path))
             (minify-file! in-file out-file)))

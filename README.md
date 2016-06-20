@@ -30,7 +30,37 @@ Use the Google Closure Compiler normally but when releasing files in `:advanced`
 
 
 ```
+## Usage with boot
 
+
+Relevant parts to add to the `build.boot` :
+
+
+```
+(set-env! :dependencies '[;; ...
+                          [nha/boot-uglify "0.0.1"]
+                          ])
+
+(require
+ ;;...
+ '[nha.boot-uglify       :refer [minify-js]]
+ )
+
+;; sample task
+(deftask package
+  "Build the package"
+  []
+  (comp
+   ;;(watch)
+   (cljs :optimizations :advanced)
+   (uglify) ;; put after the cljs task
+   ;;(aot)
+   ;;(pom)
+   ;;(uber)
+   ;;(jar)
+   ))
+
+```
 
 # Thanks
 
