@@ -8,3 +8,4 @@ pom.xml.asc
 .nrepl-port
 nashorn_code_cache/
 *.DS_Store
+resources/samples/js/output/
