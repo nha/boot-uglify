@@ -69,11 +69,11 @@
   (shell/sh "uglifyjs" (str js-input-path "blocks.js"))
   )
 
-(test/use-fixtures :once (fn [f]
-                           (.mkdirs (io/as-file js-expected-path))
-                           (clean-output (io/as-file js-output-path))
-                           ;;(clean-output (io/as-file js-expected-path))
-                           (f)))
+;; (test/use-fixtures :once (fn [f]
+;;                            (.mkdirs (io/as-file js-expected-path))
+;;                            (clean-output (io/as-file js-output-path))
+;;                            ;;(clean-output (io/as-file js-expected-path))
+;;                            (f)))
 
 
 

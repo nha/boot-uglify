@@ -1,16 +1,12 @@
 (ns nha.boot-uglify.minify-js
   (:require [clojure.java.io :as io]
             [clojure.string  :as string]
-            [cheshire.core   :refer [generate-string]]
             [nha.boot-uglify.uglifyjs :as uglify :refer [uglify-str]])
   (:import
    [java.io StringWriter FileInputStream FileOutputStream File]
    [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]
-   ;;[org.mozilla.javascript Context ImporterTopLevel ScriptableObject]
    [org.apache.commons.lang3 StringEscapeUtils]
-   [org.apache.commons.io IOUtils]
    [java.util.zip GZIPOutputStream]
-   [com.google.javascript.jscomp CompilationLevel CompilerOptions SourceFile CompilerOptions$LanguageMode]
    [java.util.logging Level]))
 
 
@@ -58,7 +54,7 @@
     (with-open [in  (FileInputStream. target)
                 out (FileOutputStream. tmp)
                 outGZIP (GZIPOutputStream. out)]
-      (IOUtils/copy in outGZIP))
+      (io/copy in outGZIP))
     (let [uncompressed-length (total-size sources)
           compressed-length   (.length target)]
       {:sources (map #(.getName %) sources)
@@ -72,7 +68,7 @@
   (with-open [out (FileOutputStream. target)]
     (doseq [file sources]
       (with-open [in (FileInputStream. file)]
-        (IOUtils/copy in out))))
+        (io/copy in out))))
   {:sources (map #(.getName %) sources)
    :target (.getName (io/file target))
    :original-size (total-size sources)})

@@ -1,8 +1,14 @@
-(ns nha.boot-uglify.trieme
+(ns nha.boot-uglify.trieme)
+
+;; CLI trireme cli.js --input-dir dist/ --output-dir target/  ;; works (like the npm module at least)!
+;; html-minifier --minify-js sample1.js -o aaa.min.js ;; works ? (slooow)
+
+;;The NodeEnvironment controls the environment for many scripts
+(comment
+
   (:refer-clojure :exclude [get])
   (:require [clojure.java.io :as io]
-            [clojure.string  :as string]
-            [cheshire.core   :refer [generate-string]])
+            [clojure.string  :as string])
   (:import
    [java.io StringWriter FileInputStream FileOutputStream File]
    [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]
@@ -10,13 +16,7 @@
    [org.apache.commons.lang3 StringEscapeUtils]
    [java.util.zip GZIPOutputStream]
    [com.google.javascript.jscomp CompilationLevel CompilerOptions SourceFile CompilerOptions$LanguageMode]
-   [io.apigee.trireme.core NodeEnvironment NodeScript]))
-
-;; CLI trireme cli.js --input-dir dist/ --output-dir target/  ;; works (like the npm module at least)!
-;; html-minifier --minify-js sample1.js -o aaa.min.js ;; works ? (slooow)
-
-;;The NodeEnvironment controls the environment for many scripts
-(comment
+   [io.apigee.trireme.core NodeEnvironment NodeScript])
   ;; an experiment for later
   (def ^NodeEnvironment node-env (NodeEnvironment.))
 

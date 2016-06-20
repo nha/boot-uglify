@@ -1,15 +1,11 @@
 (ns nha.boot-uglify.nashorn
   (:require [clojure.java.io :as io]
-            [clojure.string  :as string]
-            [cheshire.core   :refer [generate-string]])
+            [clojure.string  :as string])
   (:import
    [java.io StringWriter FileInputStream FileOutputStream File]
    [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]
-   ;;[org.mozilla.javascript Context ImporterTopLevel ScriptableObject]
    [org.apache.commons.lang3 StringEscapeUtils]
-   [org.apache.commons.io IOUtils]
    [java.util.zip GZIPOutputStream]
-   [com.google.javascript.jscomp CompilationLevel CompilerOptions SourceFile CompilerOptions$LanguageMode]
    [java.util.logging Level]))
 
 

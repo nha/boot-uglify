@@ -6,29 +6,33 @@
 
                    [boot/core                                 "2.6.0"     :scope "provided"]
                    [adzerk/bootlaces                          "0.1.13"    :scope "test"]
-                   [boot/core                                 "2.5.5"     :scope "test"]
+
 
                    [metosin/boot-alt-test                     "0.1.0"     :scope "test"]
                    [adzerk/boot-test                          "1.1.1"     :scope "test"]
 
                    ;; see pod-deps
-                   [org.mozilla/rhino                         "1.7.7.1"   :scope "test"]
-                   [cheshire                                  "5.6.1"     :scope "test"]
-                   [org.apache.commons/commons-lang3          "3.4"       :scope "test"]
-                   [com.yahoo.platform.yui/yuicompressor      "2.4.8"     :exclusions [rhino/js] :scope "test"]
-                   [commons-io                                "2.5"       :scope "test"]
-                   [com.google.javascript/closure-compiler    "v20160517" :scope "test"]
-                   [org.apache.httpcomponents/httpclient      "4.5.2"     :scope "test"]
-                   [org.apache.httpcomponents/httpasyncclient "4.1.1"     :scope "test"]
-
-
+                   [cheshire                                  "5.6.1"]
+                   [org.apache.commons/commons-lang3          "3.4"]
                    [me.raynes/fs                              "1.4.6"]
-                   [io.apigee.trireme/trireme-kernel          "0.8.9"]
-                   [io.apigee.trireme/trireme-core            "0.8.9"]
-                   [io.apigee.trireme/trireme-node10src       "0.8.9"]
-                   [io.apigee.trireme/trireme-crypto          "0.8.9"]
-                   [io.apigee.trireme/trireme-util            "0.8.9"]
-                   [io.apigee.trireme/trireme-shell           "0.8.9"]])
+
+
+                   ;; [org.mozilla/rhino                         "1.7.7.1"   :scope "test"]
+                   ;; [com.yahoo.platform.yui/yuicompressor      "2.4.8"     :exclusions [rhino/js] :scope "test"]
+
+                   ;; [com.google.javascript/closure-compiler    "v20160517" :scope "test"]
+                   ;; [org.apache.httpcomponents/httpclient      "4.5.2"     :scope "test"]
+                   ;; [org.apache.httpcomponents/httpasyncclient "4.1.1"     :scope "test"]
+
+
+                   ;; [io.apigee.trireme/trireme-kernel          "0.8.9" :scope "test"]
+                   ;; [io.apigee.trireme/trireme-core            "0.8.9" :scope "test"]
+                   ;; [io.apigee.trireme/trireme-node10src       "0.8.9" :scope "test"]
+                   ;; [io.apigee.trireme/trireme-crypto          "0.8.9" :scope "test"]
+                   ;; [io.apigee.trireme/trireme-util            "0.8.9" :scope "test"]
+                   ;; [io.apigee.trireme/trireme-shell           "0.8.9" :scope "test"]
+
+                   ])
 
 (require '[adzerk.bootlaces :refer :all]
          '[metosin.boot-alt-test :refer [alt-test]]

@@ -10,4 +10,4 @@
 (def minify-js nha.boot-uglify.minify-js/minify-js)
 
 
-(def minify-boot nha.boot-uglify.boot-task/minify)
+(def boot-uglify nha.boot-uglify.boot-task/minify-js)
