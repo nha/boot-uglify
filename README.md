@@ -11,11 +11,15 @@ Use the Google Closure Compiler normally but when releasing files in `:advanced`
 [![Clojars Project](https://img.shields.io/clojars/v/nha/boot-uglify.svg)](https://clojars.org/nha/boot-uglify)
 
 
-# How to use it
+# Usage
+
+The minifier provides two functions called `minify-css` and `minify-js`, both functions accept a source path followed by the output target and an optional parameter map. The source can be a filename, a directory, or a sequence of directories and or filenames.
 
 
-```
-(require 'nha.boot-uglify.minify-js :refer [minify-js])
+```clojure
+(ns my.ns
+  (:require [nha.boot-uglify.core :refer [minify-js]]))
+
 
 ;; (minify-js in out) ;; operates on files or directories
 
@@ -30,6 +34,7 @@ Use the Google Closure Compiler normally but when releasing files in `:advanced`
 
 
 ```
+
 ## Usage with boot
 
 
@@ -38,12 +43,12 @@ Relevant parts to add to the `build.boot` :
 
 ```
 (set-env! :dependencies '[;; ...
-                          [nha/boot-uglify "0.0.1"]
+                          [nha/boot-uglify "0.0.2"]
                           ])
 
 (require
  ;;...
- '[nha.boot-uglify       :refer [minify-js]]
+ '[nha.boot-uglify.core  :refer [minify-js]]
  )
 
 ;; sample task
