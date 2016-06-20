@@ -8,7 +8,6 @@
             [boot.file          :as file]
             [boot.task-helpers  :as helpers]
             [clojure.java.shell :as shell :refer [sh]]
-            [me.raynes.fs       :as fs]
             [nha.boot-uglify.uglifyjs :refer [uglify-str]])
   (:import
    [java.io StringWriter]
@@ -54,20 +53,14 @@
       :else        ['org.clojure/clojurescript cljs-version])))
 
 
-;; TODO see which deps are necessary
 
 (def ^:private deps
   "ClojureScript dependency to load in the pod if
    none is provided via project"
   (delay (filter identity [(cljs-depdendency)
-                           '[boot/core                                 "2.6.0"]
-                           '[org.mozilla/rhino                         "1.7.7"]
-                           '[cheshire                                  "5.5.0"]
-                           '[org.apache.commons/commons-lang3          "3.4"]
-                           '[com.yahoo.platform.yui/yuicompressor      "2.4.8" :exclusions [rhino/js]]
-                           '[com.google.javascript/closure-compiler    "v20160517"]
-                           '[org.apache.httpcomponents/httpclient      "4.5.2"]
-                           '[org.apache.httpcomponents/httpasyncclient "4.1.1"]])))
+                           '[boot/core                         "2.6.0"]
+                           '[cheshire                          "5.6.1"]
+                           '[org.apache.commons/commons-lang3  "3.4"]])))
 
 
 (defn find-mainfiles [fileset ids]
