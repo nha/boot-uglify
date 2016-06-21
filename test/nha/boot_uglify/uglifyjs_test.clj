@@ -40,11 +40,11 @@
     (catch java.io.IOException e
       nil)))
 
-(def uglify-exec (or (maybe-exec "./node_modules/uglifyjs/bin")
-                     (maybe-exec "uglifyjs")))
+;; (def uglify-exec (or (maybe-exec "./node_modules/uglifyjs/bin")
+;;                      (maybe-exec "uglifyjs")))
 
-(when-not uglify-exec
-  (throw (Exception. "No uglify implementation available")))
+;; (when-not uglify-exec
+;;   (throw (Exception. "No uglify implementation available")))
 
 (defn clean-output
   "Remove file. If file is a directory, empty it from its contents"
