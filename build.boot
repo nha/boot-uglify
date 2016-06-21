@@ -7,7 +7,7 @@
                    [adzerk/bootlaces                 "0.1.13"       :scope "test"]
                    [metosin/boot-alt-test            "0.1.0"        :scope "test"]
                    [adzerk/boot-test                 "1.1.1"        :scope "test"]
-                   [cheshire                         "5.6.1"]
+                   [cheshire                         "5.6.2"]
                    [org.apache.commons/commons-lang3 "3.4"]])
 
 (require '[adzerk.bootlaces :refer [bootlaces!]]
