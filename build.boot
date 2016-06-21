@@ -10,7 +10,7 @@
                    [cheshire                         "5.6.2"]
                    [org.apache.commons/commons-lang3 "3.4"]])
 
-(require '[adzerk.bootlaces :refer [bootlaces!]]
+(require '[adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
          '[metosin.boot-alt-test :refer [alt-test]]
          '[adzerk.boot-test :refer [test]]
          '[boot.core        :as core :refer [deftask]])
