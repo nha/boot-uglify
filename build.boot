@@ -15,7 +15,7 @@
          '[adzerk.boot-test :refer [test]]
          '[boot.core        :as core :refer [deftask]])
 
-(def +version+ "0.0.2-SNAPSHOT")
+(def +version+ "0.0.3-SNAPSHOT")
 
 (bootlaces! +version+)
 
@@ -36,3 +36,11 @@
    (pom)
    (jar)
    (install)))
+
+;; TODO From micha on slack
+;; (deftask runtests
+;;   []
+;;   (let [test-output (tmp-dir!)]
+;;     (with-pre-wrap [fs]
+;;       (run-the-tests (.getPath test-output))
+;;       (-> fs (add-resource test-output) commit!))))
