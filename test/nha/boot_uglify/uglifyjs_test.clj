@@ -79,12 +79,6 @@
 
 (deftest test-js-minification
 
-  ;; (testing "produces the same output as the expected files"
-  ;;   ;; use the common interface
-  ;;   (sut/minify-js js-input-path js-output-path)
-  ;;   (for [exp-f js-expected-files]
-  ;;     (is (= (slurp exp-f) (slurp (str js-output-path (.getName exp-f)))))))
-
 
   (testing "can escape js code"
     (is (= (sut/escape-js "a = 'test'; // 'test' used here \n print(\"a is\",  a); ")
@@ -105,6 +99,13 @@
               {:out "if(foo?bar&&baz():stuff(),foo)for(var i=0;5>i;++i)bar&&baz();else stuff();", :error nil}))))
 
 
+
+  ;; (testing "produces the same output as the expected files"
+  ;;   ;; use the common interface
+  ;;   (sut/minify-js js-input-path js-output-path)
+  ;;   (for [exp-f js-expected-files]
+  ;;     (is (= (slurp exp-f) (slurp (str js-output-path (.getName exp-f)))))))
+
   (comment
     (testing "output is the same as the locally installed UglifyJS2"
       (for [in-f js-input-files]
@@ -116,15 +117,8 @@
 
 
 (comment
-  (=
-   (:out (shell/sh "uglifyjs" (str js-input-path "blocks.js"))) ;; "if(foo){{{{}}}if(bar){baz()}{{}}}else{stuff()}if(foo){for(var i=0;i<5;++i)if(bar)baz()}else{stuff()}\n"
-   (:out (sut/uglify-str (slurp  (str js-input-path "blocks.js")))) ;; "if(foo?bar&&baz():stuff(),foo)for(var i=0;5>i;++i)bar&&baz();else stuff();"
-   )
 
+  (count (:out (shell/sh "uglifyjs" (str js-input-path "blocks.js"))))
+  (count (:out (sut/uglify-str (slurp  (str js-input-path "blocks.js")))))
 
-  (=
-   (count (:out (shell/sh "uglifyjs" (str js-input-path "blocks.js")))) ;; "if(foo){{{{}}}if(bar){baz()}{{}}}else{stuff()}if(foo){for(var i=0;i<5;++i)if(bar)baz()}else{stuff()}\n"
-   (count (:out (sut/uglify-str (slurp  (str js-input-path "blocks.js"))))) ;; "if(foo?bar&&baz():stuff(),foo)for(var i=0;5>i;++i)bar&&baz();else stuff();"
-
-   )
   )
