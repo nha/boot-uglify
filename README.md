@@ -1,4 +1,6 @@
 # Boot-uglify
+
+[![Clojars Project](https://img.shields.io/clojars/v/nha/boot-uglify.svg)](https://clojars.org/nha/boot-uglify)
 [![CircleCI](https://circleci.com/gh/nha/boot-uglify.svg?style=shield)](https://circleci.com/gh/nha/boot-uglify.svg?style=shield)
 
 A [Clojure](https://clojure.org/) library to minify JavaScript code.
@@ -9,7 +11,7 @@ Use the Google Closure Compiler normally but when releasing files in `:advanced`
 
 # Installation
 
-[![Clojars Project](https://img.shields.io/clojars/v/nha/boot-uglify.svg)](https://clojars.org/nha/boot-uglify)
+[![Clojars Project](http://clojars.org/nha/boot-uglify/latest-version.svg)](http://clojars.org/nha/boot-uglify)
 
 # Usage
 

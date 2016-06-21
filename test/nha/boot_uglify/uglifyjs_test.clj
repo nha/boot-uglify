@@ -18,9 +18,9 @@
 ;; edn files contain the expected metadata
 ;;
 
-(def js-input-path  "resources/samples/js/source/")
-(def js-expected-path "resources/samples/js/expected/")
-(def js-output-path "resources/samples/js/minified/")
+(def js-input-path  "test/resources/samples/js/source/")
+(def js-expected-path "test/resources/samples/js/expected/")
+(def js-output-path "test/resources/samples/js/minified/")
 
 
 (defn filter-js-files [path]
@@ -40,11 +40,11 @@
     (catch java.io.IOException e
       nil)))
 
-;; (def uglify-exec (or (maybe-exec "./node_modules/uglifyjs/bin")
-;;                      (maybe-exec "uglifyjs")))
+(def uglify-exec (or (maybe-exec "./node_modules/uglifyjs/bin")
+                     (maybe-exec "uglifyjs")))
 
-;; (when-not uglify-exec
-;;   (throw (Exception. "No uglify implementation available")))
+(when-not uglify-exec
+  (throw (Exception. "No uglify implementation available")))
 
 (defn clean-output
   "Remove file. If file is a directory, empty it from its contents"
