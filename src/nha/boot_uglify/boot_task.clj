@@ -85,21 +85,15 @@
            :rel-path path
            :id       (string/replace (.getName file) #"\.cljs\.edn$" ""))))
 
-;; Boot
 
 (defn make-pod
   "From boot-template"
   []
-  (-> (core/get-env)
-      (update-in [:dependencies] (fnil into []) deps)
-      (update-in [:resource-paths] (fnil into #{}) #{"resources"})
-      pod/make-pod
-      future
-      ;; (.setName "boot-uglify")
-      ))
-
-
-;; TODO pods
+  (future (-> (core/get-env)
+              (update-in [:dependencies] (fnil into []) deps)
+              (update-in [:resource-paths] (fnil into #{}) #{"resources"})
+              pod/make-pod
+              (.setName "boot-uglify"))))
 
 
 (defn minify-file! [in-file out-file]
