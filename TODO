@@ -1,3 +1,6 @@
+;; TODO option to append .min.js
+;; TODO option to not minify if the gzipped size is not better
+
 The options listed at See http://lisperator.net/uglifyjs/compress are supported.
 Additionally, :mangle is supported.
 
@@ -27,18 +30,6 @@ The defaults :
  :mangle        false
  }
 ```
-
-
-# Why ?
-
-I found out on my project that:
-- ClojureScript libraries can quickly become quite bulky (very easily >50K)
-- applying UglifyJS2 on my JS artefact, already compiled in `:advanced` mode made it smaller, and it resulted in a net gain of about 20% when served gzipped
-
-
-# Contributing
-
-Contributions/feedback welcome! See the aims section below or issues.
 
 
 # Aims

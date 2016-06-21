@@ -3,4 +3,4 @@
             nha.boot-uglify.boot-task))
 
 
-(def boot-uglify nha.boot-uglify.boot-task/minify-js)
+(def uglify nha.boot-uglify.boot-task/minify-js)

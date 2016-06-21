@@ -26,10 +26,10 @@ The minifier provides two functions called `minify-css` and `minify-js`, both fu
 ;; (minify-js in out) ;; operates on files or directories
 
 ;; on a single input file
-(minify-js "my-js-file.js" "my-js-file.min.js") ;;=> {:errors (), :warnings (), :sources ("arrays.js"), :target "arrays.min.js", :original-size 153, :compressed-size 47, :gzipped-size 55}
+(minify-js "arrays.js" "arrays.min.js") ;;=> {:errors '(), :warnings '(), :sources '("arrays.js"), :target "arrays.min.js", :original-size 153, :compressed-size 47, :original-gzipped-size 109, :gzipped-size 55}
 
 ;; several input files
-(sut/minify-js ["file1.js" "file2.js"] "file1and2.js")
+(sut/minify-js ["file1.js" "file2.js"] "twofiles.min.js") ;; {:errors '(), :warnings '(), :sources '("arrays.js" "blocks.js"), :target "twofiles.min.js", :original-size 336, :compressed-size 121, :original-gzipped-size 197, :gzipped-size 114}
 
 ;; a directory
 (sut/minify-js "js-files-dir/" "all.min.js")
@@ -50,7 +50,7 @@ Relevant parts to add to the `build.boot` :
 
 (require
  ;;...
- '[nha.boot-uglify.core  :refer [minify-js]]
+ '[nha.boot-uglify  :refer [uglify]]
  )
 
 ;; sample task

@@ -3,7 +3,7 @@
             [clojure.string  :as string]
             [nha.boot-uglify.uglifyjs :as uglify :refer [uglify-str]])
   (:import
-   [java.io StringWriter FileInputStream FileOutputStream File]
+   [java.io StringWriter FileInputStream FileOutputStream File SequenceInputStream ByteArrayInputStream ByteArrayOutputStream]
    [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]
    [org.apache.commons.lang3 StringEscapeUtils]
    [java.util.zip GZIPOutputStream]
@@ -28,6 +28,7 @@
          (filter (fn [file] (-> file .getName (.endsWith ext)))))
     [f]))
 
+
 (defn aggregate [path ext]
   (if (coll? path)
     (flatten
@@ -37,9 +38,40 @@
     (let [f (io/file path)]
       (find-assets f ext))))
 
+
 (defn total-size [files]
   (->> files (map #(.length %))
        (apply +)))
+
+
+(defn str->gzip
+  [str]
+  (^ByteArrayOutputStream with-open [out (ByteArrayOutputStream.)
+                                     gzip (GZIPOutputStream. out)]
+   (do
+     (.write gzip (.getBytes str))
+     (.finish gzip)
+     (.toByteArray out))
+   out))
+
+(.size (str->gzip "kkk"))
+
+(defn gzip-files
+  "sources"
+  [sources]
+  (^ByteArrayOutputStream str->gzip
+   (->>
+    (map slurp sources)
+    (reduce str))))
+
+
+(defn out-gzip! [target]
+  (let [tmp (File/createTempFile (.getName target) ".gz")]
+    (with-open [in  (FileInputStream. target)
+                out (FileOutputStream. tmp)
+                outGZIP (GZIPOutputStream. out)]
+      (io/copy in outGZIP))
+    tmp))
 
 
 (defn compression-details
@@ -50,18 +82,15 @@
        :compressed-size compressed-length
        :gzipped-size (.length tmp)}"
   [sources target]
-  (let [tmp (File/createTempFile (.getName target) ".gz")]
-    (with-open [in  (FileInputStream. target)
-                out (FileOutputStream. tmp)
-                outGZIP (GZIPOutputStream. out)]
-      (io/copy in outGZIP))
-    (let [uncompressed-length (total-size sources)
-          compressed-length   (.length target)]
-      {:sources (map #(.getName %) sources)
-       :target (.getName target)
-       :original-size uncompressed-length
-       :compressed-size compressed-length
-       :gzipped-size (.length tmp)})))
+  (let [uncompressed-length (total-size sources)
+        compressed-length   (.length target)]
+    ;;(assert (= (.length (out-gzip! target)) (.size (gzip-files [target]))))
+    {:sources (map #(.getName %) sources)
+     :target (.getName target)
+     :original-size uncompressed-length
+     :compressed-size compressed-length
+     :original-gzipped-size (.size (gzip-files sources))
+     :gzipped-size          (.size (gzip-files [target]))}))
 
 
 (defn merge-files [sources target]

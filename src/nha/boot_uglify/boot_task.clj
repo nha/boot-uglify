@@ -8,7 +8,8 @@
             [boot.file          :as file]
             [boot.task-helpers  :as helpers]
             [clojure.java.shell :as shell :refer [sh]]
-            [nha.boot-uglify.uglifyjs :refer [uglify-str]])
+            [nha.boot-uglify.uglifyjs  :refer [uglify-str]]
+            [nha.boot-uglify.minify-js :as minify-js-impl])
   (:import
    [java.io StringWriter]
    [javax.script ScriptEngine ScriptEngineManager ScriptException ScriptEngineFactory]))
@@ -96,15 +97,17 @@
               (.setName "boot-uglify"))))
 
 
-(defn minify-file! [in-file out-file]
-  (doto out-file
-    io/make-parents
-    (spit (uglify-str (slurp in-file)))))
+(defn minify-file! [in-file out-file verbose options]
+  (io/make-parents out-file)
+  (let [res (minify-js-impl/minify-js (str in-file) (str out-file))]
+    (when verbose
+      (println "  minified " res))))
 
 
 (deftask minify-js
   "Minify javascript files in a boot project. Assumed to be run after boot-cljs."
   [i ids IDS #{str} "ids of the builds. If none is passed, compile all .cljs.edn ids. at least main is assumed (since this is the default for boot-cljs)"
+   v verbose  bool  "Verbose output"
    o options OPTS edn "option map to pass to Uglify. See http://lisperator.net/uglifyjs/compress. Also, you can pass :mangle true to mangle names."]
 
   (let [tmp-main (core/tmp-dir!)]
@@ -117,8 +120,8 @@
                 in-file (core/tmp-file (tmp-get fileset js-rel-path))
                 out-path js-rel-path ;;(string/replace js-rel-path #"\.js" ".min.js")
                 out-file (io/file tmp-main out-path)]
-            (util/info (str "• " js-rel-path))
-            (minify-file! in-file out-file)))
+            (util/info (str "• " js-rel-path "\n"))
+            (minify-file! in-file out-file verbose options)))
         (-> fileset
             (core/add-resource tmp-main)
             core/commit!
