@@ -56,13 +56,17 @@
 
 ;; To avoid creating a new Nashorn engine
 ;; and evaluate UglifyJS every time
-;; TODO lazy creation?
-(defonce js-engine (create-uglify-engine))
+;; but not use memory as soon as the ns is loaded
+(defn maybe-init-uglify-engine []
+  (defonce js-engine (create-uglify-engine)))
+
 
 (defn uglify-str
   "Minify a String using Uglify-JS2"
   ([^String s] (uglify-str s {}))
-  ([^String s opts] (uglify-str* js-engine s opts)))
+  ([^String s opts]
+   (maybe-init-uglify-engine)
+   (uglify-str* js-engine s opts)))
 
 
 (comment
