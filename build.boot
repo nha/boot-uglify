@@ -15,7 +15,7 @@
          '[adzerk.boot-test :refer [test]]
          '[boot.core        :as core :refer [deftask]])
 
-(def +version+ "0.0.2")
+(def +version+ "0.0.2-SNAPSHOT")
 
 (bootlaces! +version+)
 
