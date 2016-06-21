@@ -71,9 +71,9 @@ Relevant parts to add to the `build.boot` :
 # Thanks
 
 The following libraries were a source of inspiration or code (or both):
-
-- assets-minifier
-- boot-cljsjs
-- yuanyan/UglifyJS-java
+- [ClojureScript](https://github.com/clojure/clojurescript)
+- [assets-minifier](https://github.com/yogthos/asset-minifier)
+- [boot-cljsjs](https://github.com/adzerk-oss/boot-cljs)
+- [yuanyan/UglifyJS-java](https://github.com/yuanyan/UglifyJS-java)
 
 Remaining bugs are mine though.
