@@ -39,7 +39,7 @@
            {:errors '(), :warnings '(), :sources '("arrays.js" "blocks.js"), :target "twofiles.min.js", :original-size 336, :compressed-size 121, :original-gzipped-size 197, :gzipped-size 114}))
 
     (is (= (slurp (str js-output-path "twofiles.min.js"))
-           "if(w=[1,,],x=[1,2,void 0],y=[1,,2],z=[1,void 0,3],foo?bar&&baz():stuff(),foo)for(var i=0;5>i;++i)bar&&baz();else stuff();"))
+           "if(w=[1,,],x=[1,2,void 0],y=[1,,2],z=[1,void 0,3],foo?bar&&baz():stuff(),foo)for(var i=0;i<5;++i)bar&&baz();else stuff();"))
 
     (testing "can minify a directory"
       (is (= (sut/minify-js js-input-path (str js-output-path "all.min.js"))

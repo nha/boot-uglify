@@ -86,7 +86,7 @@
              {:out "a=\"test\",print(\"a is\",a);", :error nil}))
 
       (is (=  (sut/uglify-str (slurp  (str js-input-path "blocks.js")))
-              {:out "if(foo?bar&&baz():stuff(),foo)for(var i=0;5>i;++i)bar&&baz();else stuff();", :error nil}))))
+              {:out "if(foo?bar&&baz():stuff(),foo)for(var i=0;i<5;++i)bar&&baz();else stuff();", :error nil}))))
 
 
 
