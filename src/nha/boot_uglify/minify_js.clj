@@ -54,7 +54,6 @@
      (.toByteArray out))
    out))
 
-(.size (str->gzip "kkk"))
 
 (defn gzip-files
   "sources"
