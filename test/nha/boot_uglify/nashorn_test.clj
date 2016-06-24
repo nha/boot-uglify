@@ -6,10 +6,10 @@
 (deftest test-nashorn-wrapper
 
   (testing "can create a Nashorn engine"
-    (is (= (class (sut/create-engine)) jdk.nashorn.api.scripting.NashornScriptEngine)))
+    (is (= jdk.nashorn.api.scripting.NashornScriptEngine (class (sut/create-engine)))))
 
   (testing "can get context from Nashorn"
-    (is (= (class (sut/get-context (sut/create-engine))) javax.script.SimpleScriptContext)))
+    (is (= javax.script.SimpleScriptContext (class (sut/get-context (sut/create-engine))))))
 
   (testing "can eval a simple string"
-    (is (= (sut/eval-str "print('Hello from JS')") {:out nil, :error nil}))))
+    (is (= {:out nil, :error nil} (sut/eval-str "print('Hello from JS')")))))
