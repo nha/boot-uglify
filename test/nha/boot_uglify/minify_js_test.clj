@@ -1,11 +1,9 @@
 (ns nha.boot-uglify.minify-js-test
   (:require [nha.boot-uglify.minify-js :as sut]
             [clojure.test :as t :refer [deftest testing is]]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [nha.run :refer [js-input-path js-output-path js-expected-path]]))
 
-(def js-input-path  "test/resources/samples/js/source/")
-(def js-expected-path "test/resources/samples/js/expected/")
-(def js-output-path "test/resources/samples/js/minified/")
 
 
 (deftest test-minify-js

@@ -13,7 +13,8 @@
 (require '[adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
          '[metosin.boot-alt-test :refer [alt-test]]
          '[adzerk.boot-test :refer [test]]
-         '[boot.core        :as core :refer [deftask]])
+         '[boot.core        :as core :refer [deftask]]
+         '[nha.run])
 
 (def +version+ "0.0.3-SNAPSHOT")
 
@@ -37,10 +38,17 @@
    (jar)
    (install)))
 
-;; TODO From micha on slack
-;; (deftask runtests
-;;   []
-;;   (let [test-output (tmp-dir!)]
-;;     (with-pre-wrap [fs]
-;;       (run-the-tests (.getPath test-output))
-;;       (-> fs (add-resource test-output) commit!))))
+
+(deftask runtests
+  " run the tests using a temporary output folder managed by boot to allow watching the files"
+  []
+  (comp
+   (let [test-output (tmp-dir!)]
+     (with-pre-wrap [fs]
+       (nha.run/setup-tests (.getPath test-output)) ;; not reloading here ? and testing  in a "wrong" namespace (tests clojure/boot ?)
+       ;; do not commit resulting files  , allows for boot to collect/delete them after the tests
+       ;;(-> fs (add-resource test-output) commit!)
+       fs
+       )
+     (test)
+     )))

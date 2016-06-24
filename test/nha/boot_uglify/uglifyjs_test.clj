@@ -3,7 +3,8 @@
             [clojure.test :as test :refer [deftest is testing run-tests]]
             [clojure.java.io :as io]
             [clojure.string :as string]
-            [clojure.java.shell :as shell]))
+            [clojure.java.shell :as shell]
+            [nha.run :refer [js-input-path js-output-path js-expected-path]]))
 
 
 
@@ -17,10 +18,6 @@
 ;; js files contain the expected result
 ;; edn files contain the expected metadata
 ;;
-
-(def js-input-path  "test/resources/samples/js/source/")
-(def js-expected-path "test/resources/samples/js/expected/")
-(def js-output-path "test/resources/samples/js/minified/")
 
 
 (defn filter-js-files [path]
@@ -68,13 +65,6 @@
   (shell/sh "less" (str js-input-path "blocks.js"))
   (shell/sh "uglifyjs" (str js-input-path "blocks.js"))
   )
-
-;; (test/use-fixtures :once (fn [f]
-;;                            (.mkdirs (io/as-file js-expected-path))
-;;                            (clean-output (io/as-file js-output-path))
-;;                            ;;(clean-output (io/as-file js-expected-path))
-;;                            (f)))
-
 
 
 (deftest test-js-minification
