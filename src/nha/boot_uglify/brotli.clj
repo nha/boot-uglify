@@ -38,7 +38,7 @@
   (delete-target target)
   (let [assets (aggregate path "") ;; no specific extension for these
         {:keys [out error] :as result} (brotli-files assets)]
-    (spit target out)
+    (spit (str target ".br") out)
     (merge
      {:errors (if error (list error) '())
       :warnings '()}
