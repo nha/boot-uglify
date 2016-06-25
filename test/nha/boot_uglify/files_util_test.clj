@@ -46,8 +46,11 @@
     (let [dir  (tmp-dir!)
           name-p1 ["a" "b" "c"]
           name-p2 [1 2 3]
-          files (gen-files! dir name-p1 name-p2 [".js" ".txt" ".gz"])]
-      (is (= (* (count name-p1) (count name-p2)) (count (sut/aggregate (str dir) ".js"))))))
+          name-ext [".js" ".txt" ".gz"]
+          files (gen-files! dir name-p1 name-p2 name-ext)]
+      (is (= (* (count name-p1) (count name-p2)) (count (sut/aggregate (str dir) ".js"))))
+      (is (= (+ 1 ;; for directory
+                (* (count name-p1) (count name-p2) (count name-ext))) (count (sut/aggregate (str dir) ""))))))
 
 
   (testing "can find files recursively based on extension"
