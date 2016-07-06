@@ -43,10 +43,10 @@ The minifier provides two functions called `minify-css` and `minify-js`, both fu
 (minify-js "arrays.js" "arrays.min.js") ;;=> {:errors '(), :warnings '(), :sources '("arrays.js"), :target "arrays.min.js", :original-size 153, :compressed-size 47, :original-gzipped-size 109, :gzipped-size 55}
 
 ;; several input files
-(sut/minify-js ["file1.js" "file2.js"] "twofiles.min.js") ;; {:errors '(), :warnings '(), :sources '("arrays.js" "blocks.js"), :target "twofiles.min.js", :original-size 336, :compressed-size 121, :original-gzipped-size 197, :gzipped-size 114}
+(minify-js ["file1.js" "file2.js"] "twofiles.min.js") ;; {:errors '(), :warnings '(), :sources '("arrays.js" "blocks.js"), :target "twofiles.min.js", :original-size 336, :compressed-size 121, :original-gzipped-size 197, :gzipped-size 114}
 
 ;; a directory
-(sut/minify-js "js-files-dir/" "all.min.js")
+(minify-js "js-files-dir/" "all.min.js")
 
 
 ```
@@ -84,7 +84,7 @@ Relevant parts to add to the `build.boot` :
 ```
 
 
-## Options
+## Options (WIP)
 
 The default options are:
 
