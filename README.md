@@ -59,7 +59,7 @@ Relevant parts to add to the `build.boot` :
 
 ```clojure
 (set-env! :dependencies '[;; ...
-                          [nha/boot-uglify "0.0.3"]
+                          [nha/boot-uglify "0.0.4"]
                           ])
 
 (require
