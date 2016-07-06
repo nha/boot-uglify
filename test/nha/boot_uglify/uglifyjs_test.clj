@@ -63,6 +63,30 @@
              (sut/uglify-str (slurp  (str js-input-path "blocks.js")))))))
 
 
+  (testing "accepts a defnined set of options"
+
+    (is (= {:out "var unused=456,c=function(){return print(\"myTest\"),123};", :error nil}
+           (sut/uglify-str "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment"
+                         {:sequences true
+                         :properties true
+                         :dead_code true
+                         :drop_debugger true
+                         :unsafe false
+                         :conditionals true
+                         :comparisons true
+                         :evaluate true
+                         :booleans true
+                         :loops true
+                         :unused true
+                         :hoist_funs true
+                         :hoist_vars false
+                         :if_return true
+                         :join_vars true
+                         :cascade true
+                         :side_effects true
+                         :warnings true
+                         :global_defs {:DEBUG false}})))
+    )
 
   ;; (testing "produces the same output as the expected files"
   ;;   ;; use the common interface

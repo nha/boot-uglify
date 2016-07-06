@@ -15,7 +15,7 @@
 (defn str->brotli
   "compress a string using the brotli algorithm"
   [s]
-  (BrotliLibraryLoader/loadBrotli)
+  (defonce init-brotli-lib-loader (BrotliLibraryLoader/loadBrotli))
   (let [in-buf (get-bytes s)]
     ;; TODO see occasional java.lang.NoClassDefFoundError: Could not initialize class org.meteogroup.jbrotli.BrotliStreamCompressor
 

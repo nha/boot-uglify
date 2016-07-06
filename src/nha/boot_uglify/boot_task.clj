@@ -99,9 +99,11 @@
 
 (defn minify-file! [in-file out-file verbose options]
   (io/make-parents out-file)
-  (let [res (minify-js-impl/minify-js (str in-file) (str out-file))]
+  ;; TODO warn if options are not in :default-options
+  (let [res (minify-js-impl/minify-js (str in-file) (str out-file) options)]
     (when verbose
-      (println "  minified " res))))
+      (println "  minified " res))
+    res))
 
 
 (deftask minify-js
@@ -123,11 +125,13 @@
                     out-path js-rel-path ;;(string/replace js-rel-path #"\.js" ".min.js")
                     out-file (io/file tmp-main out-path)]
                 (util/info (str "• " js-rel-path "\n"))
-                (minify-file! in-file out-file verbose options)))
-            ;; ignore nil files, since this is probably a .cljs.edn file
-            ;; that is not built (ie. not passed as one of the  build :ids)
-            ;; but issue a warning
-            (util/warn (str "Ignoring " js-rel-path " to suppress this warning pass an :ids argument \n"))))
+                (minify-file! in-file out-file verbose options))
+              (do
+                ;; ignore nil files, since this is probably a .cljs.edn file
+                ;; that is not built (ie. not passed as one of the  build :ids)
+                ;; but issue a warning
+                (util/warn (str "Ignoring " js-rel-path " to suppress this warning pass an :ids argument \n"))
+                ))))
         (-> fileset
             (core/add-resource tmp-main)
             core/commit!

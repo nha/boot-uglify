@@ -78,11 +78,30 @@
   (uglify-str* "var c = function myTest() {print('myTest'); return 123;}")
   (uglify-str* "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment")
 
+  (def e (create-uglify-engine))
   (uglify-str* e "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment")
 
-  (time (escape-js (slurp "resources/samples/js/source/sample1.js")))
+  (time (uglify-str (slurp "") {}))
 
-  (time (uglify-str* (slurp "resources/samples/js/source/sample1.js")));; 87 sec!
+  (uglify-str* e "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment"
+               {:sequences true
+                :properties true
+                :dead_code true
+                :drop_debugger true
+                :unsafe false
+                :conditionals true
+                :comparisons true
+                :evaluate true
+                :booleans true
+                :loops true
+                :unused true
+                :hoist_funs true
+                :hoist_vars false
+                :if_return true
+                :join_vars true
+                :cascade true
+                :side_effects true
+                :warnings true
+                :global_defs {:DEBUG false}})
 
-  (time (uglify-str (slurp "resources/samples/js/source/error.js") {}))
   )
