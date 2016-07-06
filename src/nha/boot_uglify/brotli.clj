@@ -17,13 +17,15 @@
   [s]
   (BrotliLibraryLoader/loadBrotli)
   (let [in-buf (get-bytes s)]
-    (with-open [^BrotliStreamCompressor compressor (new BrotliStreamCompressor )]
+    ;; TODO see occasional java.lang.NoClassDefFoundError: Could not initialize class org.meteogroup.jbrotli.BrotliStreamCompressor
+
+    (with-open [^BrotliStreamCompressor compressor (new BrotliStreamCompressor)]
       {:out ^bytes (.. compressor (compressArray in-buf true))
        :error nil})))
 
 
-(defn brotli-files
-  "sources"
+(defn files->brotli
+  "sources are files"
   [sources]
   (str->brotli
    (->>
@@ -32,14 +34,24 @@
 
 
 (defn compress-brotli
-  "compress files or a directory using brotli (a gzip-compatible algorithm, producing better file sizes but slower then gzip)"
-  [path target {:keys []
-                :or   {}}]
-  (delete-target target)
-  (let [assets (aggregate path "") ;; no specific extension for these
-        {:keys [out error] :as result} (brotli-files assets)]
-    (spit (str target ".br") out)
-    (merge
-     {:errors (if error (list error) '())
-      :warnings '()}
-     (compression-details assets (io/file target)))))
+  "compress files or a directory using brotli (a gzip-compatible algorithm, producing better file sizes but slower then gzip)
+  produces .br files in-place (ideal for serving static assets)"
+  [path & {:keys []
+           :or   {}}]
+  (let [assets (filter #(not (.isDirectory %)) (aggregate path "")) ;; no specific extension for these TODO default static extensions ?
+        ;; TODO if there is a target, use it with concatenated assets
+        ]
+    ;;(println "Assets: " assets)
+    (doall (for [asset assets]
+             (let [{:keys [out error] :as res} (files->brotli [asset])
+                   path (str asset ".br")]
+               ;;(println "Write to " path)
+               {:path path
+                :error error})))))
+
+
+(comment
+  (.exists (io/file nha.run/js-input-path))
+  (.isDirectory (io/file nha.run/js-input-path))
+  (compress-brotli nha.run/js-input-path)
+  )

@@ -3,12 +3,12 @@
  :test-paths     #{"test"}
  :resource-paths #{"src" "resources"}
  :repositories #(conj % '["bintray" {:url "http://dl.bintray.com/nitram509/jbrotli"}])
- :dependencies   '[[org.clojure/clojure              "1.9.0-alpha7" :scope "provided"]
+ :dependencies   '[[org.clojure/clojure              "1.9.0-alpha9" :scope "provided"]
                    [boot/core                        "2.6.0"        :scope "provided"]
                    [adzerk/bootlaces                 "0.1.13"       :scope "test"]
                    [metosin/boot-alt-test            "0.1.0"        :scope "test"]
-                   [adzerk/boot-test                 "1.1.1"        :scope "test"]
-                   [cheshire                         "5.6.2"]
+                   [adzerk/boot-test                 "1.1.2"        :scope "test"]
+                   [cheshire                         "5.6.3"]
                    [org.apache.commons/commons-lang3 "3.4"]
 
                    [org.meteogroup.jbrotli/jbrotli    "0.5.0"]])

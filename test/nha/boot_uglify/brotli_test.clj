@@ -1,6 +1,7 @@
 (ns nha.boot-uglify.brotli-test
   (:require [nha.boot-uglify.brotli :as sut]
-            [clojure.test :as t :refer [deftest testing is]]))
+            [clojure.test :as t :refer [deftest testing is]]
+            [nha.run :refer [js-input-path]]))
 
 
 (deftest test-brotli
@@ -21,7 +22,7 @@
 
   (testing "can gzip several files"
 
-    ;;(sut/compress-brotli ...)
+    ;;(sut/compress-brotli js-input-path)
     )
 
 

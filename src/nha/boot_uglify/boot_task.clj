@@ -117,11 +117,17 @@
         (util/info "Uglifying JS...\n")
         (doseq [edn-file-content (map read-cljs-edn (find-mainfiles fileset ids))]
           (let [js-rel-path (string/replace (:rel-path edn-file-content) #"\.cljs\.edn$" ".js")
-                in-file (core/tmp-file (tmp-get fileset js-rel-path))
-                out-path js-rel-path ;;(string/replace js-rel-path #"\.js" ".min.js")
-                out-file (io/file tmp-main out-path)]
-            (util/info (str "• " js-rel-path "\n"))
-            (minify-file! in-file out-file verbose options)))
+                js-file-get (tmp-get fileset js-rel-path)]
+            (if js-file-get
+              (let [in-file (core/tmp-file js-file-get)
+                    out-path js-rel-path ;;(string/replace js-rel-path #"\.js" ".min.js")
+                    out-file (io/file tmp-main out-path)]
+                (util/info (str "• " js-rel-path "\n"))
+                (minify-file! in-file out-file verbose options)))
+            ;; ignore nil files, since this is probably a .cljs.edn file
+            ;; that is not built (ie. not passed as one of the  build :ids)
+            ;; but issue a warning
+            (util/warn (str "Ignoring " js-rel-path " to suppress this warning pass an :ids argument \n"))))
         (-> fileset
             (core/add-resource tmp-main)
             core/commit!
