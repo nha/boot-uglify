@@ -13,6 +13,19 @@ Use the Google Closure Compiler normally but when releasing files in `:advanced`
 
 [![Clojars Project](http://clojars.org/nha/boot-uglify/latest-version.svg)](http://clojars.org/nha/boot-uglify)
 
+Please note that one of the dependencies is not on maven. So please add the follwowing to you leiningen project.clj:
+
+```clojure
+:repositories [["bintray.jbrotli" "http://dl.bintray.com/nitram509/jbrotli"]]
+```
+
+If using `boot`, the equivalent is:
+
+```clojure
+(set-env!
+ :repositories #(conj % '["bintray" {:url "http://dl.bintray.com/nitram509/jbrotli"}]))
+```
+
 
 # Usage
 
