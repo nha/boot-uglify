@@ -74,9 +74,9 @@
   (escape-js "a = \"test\"; // \"test\" used here")
   (escape-js "a = `test`; // 'test' used here")
 
-  (uglify-str* "a = 'test'; // 'test' used here")
-  (uglify-str* "var c = function myTest() {print('myTest'); return 123;}")
-  (uglify-str* "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment")
+  (uglify-str "a = 'test'; // 'test' used here")
+  (uglify-str "var c = function myTest() {print('myTest'); return 123;}")
+  (uglify-str "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment")
 
   (def e (create-uglify-engine))
   (uglify-str* e "var unused = 456; /*remove me*/var c = function myTest() {print(\"myTest\"); return 123;} // a comment")
