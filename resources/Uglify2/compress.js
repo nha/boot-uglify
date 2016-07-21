@@ -1,7 +1,10 @@
 /* http://lisperator.net/uglifyjs/compress */
-//print('loading compress');
+print('loading compress');
 function compress(code, options, mangle) {
-    //print('calling compress');
+    print('calling compress');
+
+    return UglifyJS.Minify(code, {fromString: true});
+
     var ast, compressor;
 
     options = options || {};
