@@ -45,5 +45,6 @@ Steps (roughly in that order):
 - [ ] minify CSS files as well - http://goalsmashers.github.io/css-minification-benchmark/
 - [ ] minify JARS with proguard?
 - [ ] better GZIP with zopfli / 1 - wrapper, see http://www.tricoder.net/blog/?p=197 and http://stackoverflow.com/q/30828079/1327651
+- [ ] investigate https://en.wikipedia.org/wiki/SDCH
 - [ ] better compress with brotli
 - [ ] at any given step, see if some protocol could be implemented

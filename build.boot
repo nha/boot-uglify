@@ -19,7 +19,7 @@
          '[boot.core        :as core :refer [deftask]]
          '[nha.run])
 
-(def +version+ "0.0.6")
+(def +version+ "0.0.7-SNAPSHOT")
 
 (bootlaces! +version+)
 

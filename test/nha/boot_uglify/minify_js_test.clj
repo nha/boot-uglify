@@ -37,4 +37,4 @@
   (testing "can use brotli as a compression method"
 
     (is (= {:errors '(), :warnings '(), :sources '("arrays.js" "blocks.js" "conditionals.js"), :target "all.min.js", :original-size 413, :compressed-size 158, :sources-gzipped-size 194, :target-gzipped-size 104}
-           (sut/minify-js js-input-path (str js-output-path "all.min.js") :compression-method :brotli)))))
+           (sut/minify-js js-input-path (str js-output-path "all.min.js") {:compression-method :brotli})))))
