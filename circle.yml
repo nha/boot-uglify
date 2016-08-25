@@ -17,3 +17,5 @@ dependencies:
 test:
   override:
     - echo 1
+  post:
+    - bash <(curl -s https://codecov.io/bash)
