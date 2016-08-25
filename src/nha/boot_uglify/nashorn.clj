@@ -66,8 +66,6 @@
 
 
 (comment
+  (eval-str "var a = 3; print(\"OK\")")
   (eval-str (slurp (io/resource "Uglify2/uglifyjs.self.js")))
-
-  ;; does not work (xmlhttp request)
-  (eval-str (slurp (io/resource "html-minifier/dist/htmlminifier.js")))
   )

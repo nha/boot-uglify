@@ -45,12 +45,11 @@
 
 
 (comment
-  (.exists (io/file "resources/samples/js/source/arrays.js"))
-  (minify-js "resources/samples/js/source/arrays.js" "resources/samples/js/source/arrays.min.js")
+  (.exists (io/file "test/resources/samples/js/source/arrays.js"))
+  (minify-js "test/resources/samples/js/source/arrays.js" "test/resources/samples/js/source/arrays.min.js")
 
-  (slurp "resources/samples/js/source/arrays.min.js")
-  (minify-js "resources/samples/js/source/sample1.js" "resources/samples/js/source/sample1.min.js")
+  (slurp "test/resources/samples/js/source/arrays.min.js")
 
-  (minify-js "resources/samples/js/source/blocks.js" "resources/samples/js/source/blocks.min.js")
-  (slurp "resources/samples/js/source/blocks.min.js")
+  (minify-js "test/resources/samples/js/source/blocks.js" "test/resources/samples/js/source/blocks.min.js")
+  (slurp "test/resources/samples/js/source/blocks.min.js")
   )
