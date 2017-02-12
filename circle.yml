@@ -1,6 +1,8 @@
 machine:
   java:
     version: oraclejdk8
+  node:
+    version: 0.10.22
   environment:
     BOOT_VERSION: 2.6.0
     _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
@@ -11,10 +13,13 @@ dependencies:
   pre:
     - curl -L https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh -o ~/bin/boot
     - chmod +x ~/bin/boot
+    - npm install -g snyk
+    - snyk auth ${SNYK_AUTH}
   override:
     # Run tests in dependency step to cache the deps
-    - boot test
+    - boot test pom target
     - bash <(curl -s https://codecov.io/bash)
+    - snyk test --file=target/META-INF/maven/nha/boot-uglify/pom.xml
 test:
   override:
     - echo 1
