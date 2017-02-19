@@ -1,4 +1,5 @@
 # Boot-uglify
+ just testing circlePR checks 1
 
 [![Clojars Project](https://img.shields.io/clojars/v/nha/boot-uglify.svg)](https://clojars.org/nha/boot-uglify)
 [![CircleCI](https://circleci.com/gh/nha/boot-uglify.svg?style=shield)](https://circleci.com/gh/nha/boot-uglify.svg?style=shield)
