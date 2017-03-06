@@ -28,10 +28,11 @@
    Exposes the same API as yoghtos/assets-minifier plus additional data returned and no options (yet)"
   ([path target] (minify-js path target {}))
   ([path target {:keys [compression-method]
-                 :or   {compression-method :gzip}}]
+                 :or   {compression-method :gzip}
+                 :as uglify-opts}]
+   (util/dbug* "Uglify options: %s\n" (util/pp-str uglify-opts))
    (delete-target target)
    (let [assets (aggregate path ".js")
-         uglify-opts {}
          {:keys [out error] :as result} (uglify-str (->> assets
                                                          (map slurp)
                                                          (reduce str)) uglify-opts)]
