@@ -3,23 +3,22 @@
  :test-paths     #{"test"}
  :resource-paths #{"src" "resources"}
  :repositories #(conj % '["bintray" {:url "http://dl.bintray.com/nitram509/jbrotli"}])
- :dependencies   '[[org.clojure/clojure              "1.9.0-alpha9" :scope "provided"]
-                   [boot/core                        "2.6.0"        :scope "provided"]
-                   [adzerk/bootlaces                 "0.1.13"       :scope "test"]
-                   [metosin/boot-alt-test            "0.1.0"        :scope "test"]
-                   [adzerk/boot-test                 "1.1.2"        :scope "test"]
-                   [cheshire                         "5.6.3"]
-                   [org.apache.commons/commons-lang3 "3.4"]
-
+ :dependencies   '[[org.clojure/clojure              "1.10.1"       :scope "provided"]
+                   [boot/core                        "2.8.3"        :scope "provided"]
+                   [adzerk/bootlaces                 "0.2.0"        :scope "test"]
+                   [metosin/bat-test "0.4.3"                       :scope "test"]
+                   [adzerk/boot-test                 "1.2.0"        :scope "test"]
+                   [cheshire                         "5.9.0"]
+                   [org.apache.commons/commons-lang3 "3.9"]
                    [org.meteogroup.jbrotli/jbrotli    "0.5.0"]])
 
 (require '[adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
-         '[metosin.boot-alt-test :refer [alt-test]]
+         '[metosin.bat-test :refer [bat-test]]
          '[adzerk.boot-test :refer [test]]
          '[boot.core        :as core :refer [deftask]]
          '[nha.run])
 
-(def +version+ "2.7.4-SNAPSHOT")
+(def +version+ "2.8.29-SNAPSHOT")
 
 (bootlaces! +version+)
 
