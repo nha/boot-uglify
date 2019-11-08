@@ -4,7 +4,7 @@ machine:
   node:
     version: 0.10.22
   environment:
-    BOOT_VERSION: 2.6.0
+    BOOT_VERSION: 2.8.3
     _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
 dependencies:
   cache_directories:
