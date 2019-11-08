@@ -12,15 +12,33 @@
                    [org.apache.commons/commons-lang3 "3.9"]
                    [org.meteogroup.jbrotli/jbrotli    "0.5.0"]])
 
-(require '[adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
+(require '[adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot]]
          '[metosin.bat-test :refer [bat-test]]
          '[adzerk.boot-test :refer [test]]
          '[boot.core        :as core :refer [deftask]]
+         '[boot.task.built-in :refer [push]]
+         '[boot.git           :refer [last-commit]]
          '[nha.run])
 
-(def +version+ "2.8.29-SNAPSHOT")
+(def +version+ "2.8.29")
 
 (bootlaces! +version+)
+
+
+(def ^:private +last-commit+
+  (try (last-commit) (catch Throwable _)))
+
+(deftask push-release
+  "Deploy release version to Clojars."
+  [f file PATH str "The jar file to deploy."]
+  (comp
+    (#'adzerk.bootlaces/collect-clojars-credentials)
+    (push
+      :file           file
+      :tag            (boolean +last-commit+)
+      :gpg-sign       false
+      :ensure-release true
+      :repo           "deploy-clojars")))
 
 (task-options!
  pom {:project     'nha/boot-uglify
@@ -28,7 +46,8 @@
       :description "Boot task to uglify js code"
       :url         "https://github.com/nha/boot-uglify"
       :scm         {:url "https://github.com/nha/boot-uglify"}
-      :license     {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}})
+      :license     {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}}
+ push-release {:gpg-sign false})
 
 (deftask dev
   "Dev process"
